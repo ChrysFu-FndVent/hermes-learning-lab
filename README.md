@@ -1,3 +1,164 @@
+<div align="right">
+  <a href="#english">English</a> | <a href="#简体中文">简体中文</a>
+</div>
+
+<a id="english"></a>
+
+<div align="center">
+
+# Hermes Learning Lab
+
+**A hands-on Chinese course for learning Hermes Agents, from the Agent Loop to safe delegation.**
+
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0b0b0a)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![Playwright](https://img.shields.io/badge/QA-Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![Language](https://img.shields.io/badge/Course%20Language-Simplified%20Chinese-e7a83e)](#learning-path)
+[![Safety](https://img.shields.io/badge/Runtime-Browser%20Simulation-70b58a)](#safety-boundaries)
+
+[Quick Start](#quick-start) · [Learning Path](#learning-path) · [Research](./RESEARCH.md) · [Design](./DESIGN.md) · [Figma](https://www.figma.com/design/0l0vZa7noe6dyyiOZbakgD?node-id=8-2)
+
+</div>
+
+![Hermes Learning Lab three-column course workspace](./preview.png)
+
+## Table of Contents
+
+- [What It Is](#what-it-is)
+- [Highlights](#highlights)
+- [Learning Path](#learning-path)
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Safety Boundaries](#safety-boundaries)
+- [Research and Design Resources](#research-and-design-resources)
+
+## What It Is
+
+Hermes Learning Lab is an interactive Chinese-language beginner platform built from the [official Hermes Agent repository](https://github.com/NousResearch/hermes-agent), official documentation, and verified community projects.
+
+Instead of starting with long conceptual explanations, it organizes each topic into a short learning loop:
+
+```text
+Understand the concept -> Observe the Agent trace -> Decide in a simulated environment -> Get immediate feedback -> Record mastery
+```
+
+> [!NOTE]
+> This is an independent community education project, not an official product of Nous Research or Hermes Agent.
+
+## Highlights
+
+| Learning Experience | Engineering and Safety |
+|---|---|
+| 8 progressively guided lessons | Pure frontend architecture with React + Vite |
+| Single-choice, multiple-choice, and configuration-builder exercises | All Hermes commands are simulations only |
+| Visualized Agent turn traces | Does not read local configuration or credentials |
+| Immediate feedback and targeted guidance | Versioned `localStorage` progress |
+| Checkpoints, mastery, and progress reset | Responsive desktop, tablet, and mobile layouts |
+| Official and community project research views | Keyboard focus and semantic control support |
+
+## Learning Path
+
+| Lesson | Topic | Practical Task |
+|---:|---|---|
+| 01 | Meet Hermes | Choose an approval scope for the first write task |
+| 02 | Models and Identity | Configure a provider and an independent profile |
+| 03 | Tools and Approval | Assemble the minimum toolchain required for a task |
+| 04 | Sessions and Memory | Decide whether information belongs in Session or Memory |
+| 05 | Skills and MCP | Assemble an executable Skill structure |
+| 06 | Messaging and Automation | Build a Gateway + Cron weekday briefing |
+| 07 | Delegation and Parallelism | Identify independent tasks suitable for parallel dispatch |
+| 08 | Safety Graduation Challenge | Combine scope, approval, rollback, and verification evidence |
+
+## Quick Start
+
+### Requirements
+
+- Node.js 18+
+- npm 9+
+
+### Local Development
+
+```bash
+git clone https://github.com/ChrysFu-FndVent/hermes-learning-lab.git
+cd hermes-learning-lab
+npm install
+npm run dev
+```
+
+Vite prints the local URL after startup, usually `http://localhost:5173/`.
+
+### Quality Checks
+
+```bash
+npm run lint
+npm run build
+```
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[GitHub and official documentation] --> B[Structured course data]
+    B --> C[React learning engine]
+    C --> D[Exercise evaluation and immediate feedback]
+    D --> E[localStorage progress]
+    C --> F[Research and architecture views]
+```
+
+| Layer | Responsibility |
+|---|---|
+| Content | Lessons, questions, documentation links, and open-source project research |
+| Learning Engine | Exercise evaluation, feedback, lesson completion, and mastery |
+| Persistence | Saves local learning progress with a versioned schema |
+| UI Shell | Three-column workspace, responsive navigation, and accessible interactions |
+
+## Project Structure
+
+```text
+hermes-learning-lab/
+├── src/
+│   ├── App.jsx          # Course, research, and architecture views
+│   ├── data.js          # Course and project research data
+│   └── styles.css       # Visual system and responsive layout
+├── public/              # Static visual assets
+├── docs/adr/            # Architecture decision records
+├── DESIGN.md            # Product, interaction, and technical design
+├── RESEARCH.md          # Hermes open-source ecosystem research summary
+└── preview.png          # Finished desktop preview
+```
+
+## Safety Boundaries
+
+Commands in the application are shown for teaching purposes only. The current version does not:
+
+- Invoke the local Hermes CLI or shell
+- Read `~/.hermes`, environment variables, or model credentials
+- Write Hermes configuration or install Skills/MCP
+- Connect to messaging platforms such as Telegram, Discord, or Slack
+- Upload learning progress to remote services
+
+See [ADR 0001](./docs/adr/0001-browser-simulation-first.md) for the full tradeoff behind the browser-simulation approach. Before entering a real environment, refer to the current [official Hermes documentation](https://hermes-agent.nousresearch.com/docs/).
+
+## Research and Design Resources
+
+- [Hermes Agent GitHub research summary](./RESEARCH.md)
+- [Product design, feature modules, and user flows](./DESIGN.md)
+- [Figma concept and web capture](https://www.figma.com/design/0l0vZa7noe6dyyiOZbakgD?node-id=8-2)
+- [Official Hermes Agent documentation](https://hermes-agent.nousresearch.com/docs/)
+
+---
+
+<div align="center">
+  <sub>Learn the boundaries. Practise the loop. Ship with evidence.</sub>
+</div>
+
+<p align="right"><a href="#english">Back to English</a></p>
+
+---
+
+<a id="简体中文"></a>
+
 <div align="center">
 
 # Hermes Learning Lab
