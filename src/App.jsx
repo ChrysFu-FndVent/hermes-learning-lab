@@ -207,12 +207,12 @@ function BuilderFields({ fields, values, setValues }) {
         <label key={field.id}>
           <span>{field.label}</span>
           {field.type === "select" ? (
-            <select value={values[field.id] || ""} onChange={(event) => setValues((current) => ({ ...current, [field.id]: event.target.value }))}>
+            <select id={`builder-${field.id}`} name={field.id} value={values[field.id] || ""} onChange={(event) => setValues((current) => ({ ...current, [field.id]: event.target.value }))}>
               <option value="">请选择</option>
               {field.options.map((item) => <option key={item} value={item}>{item}</option>)}
             </select>
           ) : (
-            <input value={values[field.id] || ""} placeholder={field.placeholder} onChange={(event) => setValues((current) => ({ ...current, [field.id]: event.target.value }))} />
+            <input id={`builder-${field.id}`} name={field.id} value={values[field.id] || ""} placeholder={field.placeholder} onChange={(event) => setValues((current) => ({ ...current, [field.id]: event.target.value }))} />
           )}
         </label>
       ))}
@@ -635,7 +635,7 @@ function CourseView({ lesson, lessonIndex, completed, diagnostic, onDiagnose, on
       <TracePanel lesson={lesson} />
 
       <section className="guided-section">
-        <div className="section-heading-row"><div><span className="section-label">核心讲解</span><h2>建立本课心智模型</h2></div><span>{stepIndex + 1} / {lesson.steps.length}</span></div>
+        <div className="section-heading-row"><div><span className="section-label">核心操作</span><h2>完成本课关键步骤</h2></div><span>{stepIndex + 1} / {lesson.steps.length}</span></div>
         <div className="step-tabs" role="tablist" aria-label="教程步骤">
           {lesson.steps.map((step, index) => (
             <button key={step.title} role="tab" aria-selected={stepIndex === index} onClick={() => setStepIndex(index)} className={stepIndex === index ? "is-active" : ""}>
@@ -685,7 +685,7 @@ function ProgressRail({ lesson, completed, diagnostics, onReset }) {
 
       <div className="rail-divider" />
       <span className="section-label">学习反馈</span>
-      <p className="rail-feedback">{completedCurrent ? "课后检查已通过。建议在真实隔离环境完成实验成功标准后再进入下一阶段。" : diagnostics[lesson.id] === "review" ? "课前诊断发现待补知识。完成核心讲解与实验后，用课后检查验证掌握度。" : "先完成课前诊断，再依次学习概念、实验和课后检查。"}</p>
+      <p className="rail-feedback">{completedCurrent ? "课后检查已通过。建议在真实隔离环境完成实验成功标准后再进入下一阶段。" : diagnostics[lesson.id] === "review" ? "课前诊断发现待补操作。完成核心步骤与实验后，用课后检查验证掌握度。" : "先完成课前诊断，再依次学习操作、实验和课后检查。"}</p>
       <button className="reset-button" onClick={onReset}><RefreshCcw size={14} />重置本地进度</button>
     </aside>
   );

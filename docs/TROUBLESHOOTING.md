@@ -114,3 +114,18 @@ macOS/Linux/WSL2 使用 `curl -fsSL https://hermes-agent.nousresearch.com/instal
 - 核对 vLLM/SGLang 的工具解析器是否匹配当前模型卡。
 - 先缩小 JSON Schema 并加入合法示例，再调整采样参数。
 - 保存失败样例进入评测集；不要用更大模型替代错误定位。
+
+## 模型切换后无法对话
+
+1. 用 `hermes model` 回切实验前记录的可用 Provider 与模型。
+2. 模型列表陈旧时运行 `hermes model --refresh`，不要同时重写其他配置。
+3. 运行 `hermes doctor`，依次检查凭据、模型权限、网络和配额。
+4. 回切后重跑同一条无工具基线 Prompt；只有它通过后才恢复 Skills 或 Gateway。
+
+## 备份或恢复失败
+
+- `hermes backup` 长时间无进展时，确认输出目录不在 `~/.hermes` 内并检查剩余磁盘空间。
+- 备份完成后运行 `unzip -t <backup.zip>`；验证失败的归档不能作为唯一恢复点。
+- `hermes import <backup.zip>` 会覆盖现有文件，只在干净测试环境或已创建第二份备份后执行。
+- 导入前停止相关 Gateway；导入后按 `doctor -> model -> sessions -> skills -> gateway` 顺序逐层启用。
+- 备份包含敏感状态，不要提交到 Git、公开网盘或课程回执。

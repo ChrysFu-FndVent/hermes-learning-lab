@@ -67,6 +67,7 @@ Profile / Model：
 - 飞书审批卡已订阅 `card.action.trigger`、启用交互式卡片，点击时不出现 `200340`。
 - 能解释一次工具回合中的意图、工具、审批和验证。
 - 能证明凭据和普通配置分离。
+- 已用同一组问答、JSON 和只读工具任务完成模型切换；候选模型失败后能回切并通过 Doctor。
 
 ### 阶段 II：可靠交互
 
@@ -77,17 +78,62 @@ Profile / Model：
 
 ### 阶段 III：扩展与自动化
 
-- Skill/Plugin/MCP 的来源、权限和验证均有记录。
+- Skill 的 search、inspect、隔离安装、只读触发、check/audit 和卸载均有记录。
 - 自动化区分触发、执行、验证和交付状态。
 - 重试不会产生重复副作用。
-- 并行子任务自包含且不写共享文件，主 Agent 完成最终复核。
+- 并行子任务自包含且不写共享文件；`/agents` 无遗留运行项，主 Agent 完成最终复核。
 
 ### 阶段 IV：工程化与进阶
 
 - Sandbox 和 Egress 都通过允许与拒绝两类测试。
-- 结构化输出评测报告包含正确率、延迟和失败样例。
-- 微调决策遵循 Prompt → Skill → SFT/LoRA → RL 阶梯。
+- 完整备份通过 zip 完整性检查，且未进入 Git 或公开存储。
+- 恢复只在可丢弃环境演练，完成 Doctor、模型、会话、Skills 与 Gateway 五层验收。
 - 毕业项目包含权限矩阵、评测基线、失败策略和回滚演练。
+
+## 高频实操演练
+
+### 模型切换与回退
+
+1. 运行 `hermes model`，记下当前可用模型；用固定 Prompt 得到 `MODEL_BASELINE_OK`。
+2. 准备问答、JSON、只读文件检查三条输入，保存响应、延迟和工具结果。
+3. 在 `research` Profile 切换候选模型，原样复测，不同时改动 Skills、Gateway 或密钥。
+4. 候选失败时回切原模型，运行 `hermes doctor` 并重跑 `MODEL_BASELINE_OK`。
+
+### Skill 安装与恢复
+
+```bash
+hermes skills search <keyword>
+hermes skills inspect <identifier>
+hermes -p research skills install <identifier>
+hermes -p research skills list
+hermes -p research skills check
+hermes -p research skills audit
+hermes -p research skills uninstall <name>
+```
+
+安装前记录来源、依赖、外部命令、写入与联网目标。安装后开新会话执行只读任务，确认目标 Skill 被触发；扫描被阻断时先定位原因，不使用 `--force` 跳过审查。
+
+### 并行任务观察与收口
+
+1. 准备三张自包含只读任务单，统一返回 `finding / command / evidence / status`。
+2. 从主会话要求 Hermes 分别委派，并在全部返回后汇总。
+3. 运行 `/agents`，记录每个任务的运行、完成或失败状态。
+4. 主会话逐条核对证据，再亲自运行一条集成验证命令。
+
+### 备份与迁移恢复
+
+```bash
+hermes backup
+# macOS / Linux
+unzip -t <hermes-backup.zip>
+# Windows PowerShell
+tar -tf <hermes-backup.zip>
+hermes backup --quick
+# 仅在干净、可丢弃的测试环境中执行：
+hermes import <hermes-backup.zip>
+```
+
+完整 zip 可能包含凭据、会话和消息平台状态，应加密并限制访问。`hermes import` 会覆盖现有文件；导入前为目标环境再做一份备份，并停止相关 Gateway。
 
 ## 提交物建议
 
