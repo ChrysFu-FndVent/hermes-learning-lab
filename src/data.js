@@ -7,9 +7,103 @@ export const phases = [
 
 const option = (id, label, detail) => ({ id, label, detail });
 
+export const onboardingTracks = [
+  {
+    id: "desktop",
+    label: "桌面应用",
+    title: "下载 Hermes Desktop",
+    summary: "适合第一次使用 Hermes 的学习者。安装器会配置桌面应用与 CLI，两者共享配置、会话和 Skills。",
+    recommended: true,
+    steps: [
+      { title: "打开官方下载页", body: "在 macOS 或 Windows 下载对应的 Hermes Desktop 安装器。", action: "打开下载页", url: "https://hermes-agent.nousresearch.com/" },
+      { title: "运行安装器", body: "按向导完成依赖与 Hermes 核心安装；Windows 无需管理员权限。" },
+      { title: "完成首次设置", body: "选择 Provider 和模型，先完成一次普通聊天，再启用外部平台。", command: "hermes setup" },
+      { title: "已有 CLI 时启动桌面端", body: "桌面端会复用现有配置、密钥、会话与 Skills。", command: "hermes desktop" },
+    ],
+    verify: "桌面端能创建新会话、选择模型并收到一条普通回复。",
+    docs: "https://hermes-agent.nousresearch.com/docs/user-guide/desktop",
+  },
+  {
+    id: "mac",
+    label: "macOS 终端",
+    title: "在 macOS 安装 Hermes CLI",
+    summary: "只需预先安装 Git；官方安装器会管理 uv、Python 3.11、Node.js 22、ripgrep 与 ffmpeg。",
+    steps: [
+      { title: "检查 Git", body: "如果命令不可用，先安装 Xcode Command Line Tools。", command: "git --version" },
+      { title: "运行官方安装器", body: "在 Terminal 中执行一行安装命令。", command: "curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash" },
+      { title: "刷新终端环境", body: "新开终端，或在当前 zsh 会话重新加载 PATH。", command: "source ~/.zshrc" },
+      { title: "配置并验收", body: "完成 Setup 后先运行 Doctor，再开始普通聊天。", command: "hermes setup && hermes doctor && hermes" },
+    ],
+    verify: "hermes doctor 无阻断错误，hermes 能进入聊天界面。",
+    docs: "https://hermes-agent.nousresearch.com/docs/getting-started/installation",
+  },
+  {
+    id: "windows",
+    label: "Windows 原生",
+    title: "在 Windows 原生安装 Hermes",
+    summary: "适合希望直接在 PowerShell、Windows Terminal 或桌面应用中运行 Hermes 的用户。",
+    steps: [
+      { title: "打开 PowerShell", body: "使用普通用户权限即可，无需以管理员身份运行。" },
+      { title: "运行官方安装脚本", body: "安装位置默认为 %LOCALAPPDATA%\\hermes，并写入用户 PATH。", command: "iex (irm https://hermes-agent.nousresearch.com/install.ps1)" },
+      { title: "重新打开终端", body: "安装结束后新开 PowerShell，让用户 PATH 生效。" },
+      { title: "检查并启动", body: "完成配置检查；需要 GUI 时从同一安装启动桌面端。", command: "hermes doctor\nhermes desktop" },
+    ],
+    verify: "新终端能识别 hermes，桌面端与 CLI 能看到同一套会话。",
+    docs: "https://hermes-agent.nousresearch.com/docs/user-guide/windows-native",
+  },
+  {
+    id: "wsl",
+    label: "Windows WSL2",
+    title: "通过 WSL2 使用 Linux 版 Hermes",
+    summary: "适合偏好 Linux 工具链、systemd 和本地开发环境的 Windows 用户；官方建议 Ubuntu LTS。",
+    steps: [
+      { title: "安装 WSL2", body: "在管理员 PowerShell 执行并按提示重启。", command: "wsl --install" },
+      { title: "确认使用 WSL2", body: "目标发行版的 VERSION 应为 2，而不是 1。", command: "wsl --list --verbose" },
+      { title: "在 Ubuntu 内安装", body: "打开 WSL2 终端后使用 Linux/macOS 安装器。", command: "curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash" },
+      { title: "刷新并运行", body: "项目建议放在 ~/code，而不是 /mnt/c，以减少跨文件系统开销。", command: "source ~/.bashrc && hermes" },
+    ],
+    verify: "WSL 发行版显示 VERSION 2，Hermes 能在 Linux 文件系统中的项目目录正常聊天。",
+    docs: "https://hermes-agent.nousresearch.com/docs/user-guide/windows-wsl-quickstart",
+  },
+  {
+    id: "feishu",
+    label: "连接飞书",
+    title: "把 Hermes 接入飞书群聊和私聊",
+    summary: "推荐使用 WebSocket 长连接：Hermes 主动向飞书建立连接，不需要公网 URL。",
+    steps: [
+      { title: "启动接入向导", body: "选择 Feishu / Lark。推荐用飞书手机扫描二维码自动创建应用并保存凭据。", command: "hermes gateway setup" },
+      { title: "手动模式准备应用", body: "在飞书开放平台创建企业自建应用，启用机器人，保存 App ID 与 App Secret。", action: "打开飞书应用控制台", url: "https://open.feishu.cn/app" },
+      { title: "配置权限和事件", body: "至少添加 im:message、im:message:send_as_bot、im:resource、im:chat、im:chat:readonly，并订阅 im.message.receive_v1。" },
+      { title: "发布并启动 Gateway", body: "发布应用版本并等待管理员审批；然后启动 Gateway，在群聊中 @机器人做冒烟测试。", command: "hermes gateway" },
+    ],
+    verify: "群聊中 @Hermes 后能收到回复；生产环境已配置 FEISHU_ALLOWED_USERS。",
+    docs: "https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu",
+  },
+];
+
 export const lessons = [
   {
-    id: "setup-doctor", number: "00", phaseId: "foundation", level: "Beginner", title: "环境与诊断", shortTitle: "先建立一个可工作的 Hermes", duration: "14 分钟",
+    id: "installation-channels", number: "00", phaseId: "foundation", level: "Beginner", title: "下载与多端接入", shortTitle: "安装 Hermes，并完成桌面与飞书首轮体验", duration: "24 分钟",
+    summary: "根据设备选择桌面安装器或终端安装，完成首次配置，再把同一个 Hermes 安全地连接到飞书。",
+    objective: "能够选择正确安装路径，完成 Doctor 验收，并解释桌面端与飞书端如何共享 Hermes 运行时。",
+    prerequisites: ["macOS 或 Windows 设备", "可访问官方安装页", "一个模型 Provider"],
+    preQuiz: { prompt: "第一次接触 Hermes，官方推荐哪种安装路径？", options: [option("desktop", "Hermes Desktop 安装器", "同时安装桌面应用与 CLI"), option("source", "直接从源码构建", "更适合贡献者"), option("docker", "先搭建生产容器", "不适合作为首次体验")], correct: "desktop", explanation: "macOS/Windows 首次使用推荐桌面安装器；熟悉终端后也可以选择 CLI-only 安装。" },
+    command: "hermes gateway setup",
+    trace: ["选择设备与安装方式", "完成 Setup 和 Doctor", "在桌面端执行一次任务", "连接飞书并验证 @提及"],
+    steps: [
+      { title: "先选安装入口", body: "macOS/Windows 初学者优先使用 Desktop 安装器；CLI 用户选择 macOS shell、Windows 原生 PowerShell 或 WSL2。" },
+      { title: "先验收再扩展", body: "安装后运行 Setup、Doctor 和一次普通聊天。只有基础会话通过后，才继续配置桌面工作流或飞书 Gateway。" },
+      { title: "桌面端共享运行时", body: "hermes desktop 会复用当前配置、密钥、Sessions 与 Skills。桌面端是操作界面，不是另一套独立 Agent。" },
+      { title: "飞书走 Gateway", body: "推荐 WebSocket 长连接，不需要公网地址。群聊默认要求 @机器人；生产使用必须限制用户和群组范围。" },
+    ],
+    checkpoints: ["选择安装路径", "完成 Doctor 验收", "完成桌面模拟", "完成飞书模拟"],
+    lab: { task: "完成一个从安装到飞书消息的端到端冒烟测试。", input: "一台 macOS/Windows 设备、可用 Provider、飞书企业自建应用或扫码创建权限。", procedure: ["选择并执行对应安装路径", "运行 Setup、Doctor 和一次普通聊天", "在桌面端完成新会话与单次审批", "运行 gateway setup 并选择 Feishu/Lark", "发布飞书应用并在群聊 @Hermes"], successCriteria: ["CLI 与桌面端共享会话", "Doctor 无阻断错误", "飞书只响应允许用户和有效 @提及", "App Secret 未出现在聊天或截图中"] },
+    practice: { type: "choice", prompt: "Hermes 运行在个人电脑且没有公网 URL，连接飞书应该优先选择什么？", options: [option("websocket", "WebSocket 长连接", "出站连接，无需公网入口"), option("webhook", "公开 Webhook", "需要可达 HTTP 地址"), option("poll", "每分钟轮询", "不是官方推荐连接方式")], correct: "websocket", success: "正确。个人电脑或私有服务器优先使用 WebSocket 长连接。", hint: "选择不要求公网 URL、由 Hermes 主动建立的连接方式。" },
+    takeaways: ["先建立可工作的本地聊天", "桌面和飞书共享同一个 Hermes 运行时"], troubleshooting: "命令不可用时先刷新 PATH；飞书不回复时检查应用是否已发布、im.message.receive_v1、Gateway 状态、@提及和用户白名单。",
+    references: [{ label: "Installation", url: "https://hermes-agent.nousresearch.com/docs/getting-started/installation" }, { label: "Desktop", url: "https://hermes-agent.nousresearch.com/docs/user-guide/desktop" }, { label: "Windows Native", url: "https://hermes-agent.nousresearch.com/docs/user-guide/windows-native" }, { label: "Feishu", url: "https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu" }],
+  },
+  {
+    id: "setup-doctor", number: "01", phaseId: "foundation", level: "Beginner", title: "环境与诊断", shortTitle: "先建立一个可工作的 Hermes", duration: "14 分钟",
     summary: "从安装、Setup 到 Doctor，建立可重复的最小启动路径；先通过一次聊天验收，再逐步添加能力。",
     objective: "完成最小配置，读懂诊断结果，并按正确顺序恢复一个无法对话的 Hermes。",
     prerequisites: ["Python 3.11+", "可访问模型 Provider", "终端基础操作"],
@@ -29,10 +123,10 @@ export const lessons = [
     references: [{ label: "Quickstart", url: "https://hermes-agent.nousresearch.com/docs/getting-started/quickstart" }, { label: "Configuration", url: "https://hermes-agent.nousresearch.com/docs/user-guide/configuration" }],
   },
   {
-    id: "agent-loop", number: "01", phaseId: "foundation", level: "Beginner", title: "Agent Loop", shortTitle: "从任务到可观察行动", duration: "12 分钟",
+    id: "agent-loop", number: "02", phaseId: "foundation", level: "Beginner", title: "Agent Loop", shortTitle: "从任务到可观察行动", duration: "12 分钟",
     summary: "理解意图、计划、工具调用、观察结果与继续迭代组成的 Agent 回合，并为副作用设置审批。",
     objective: "识别一次完整 Agent 回合，为读写动作选择匹配风险的授权范围。",
-    prerequisites: ["完成 Lesson 00", "能够进入 Hermes TUI"],
+    prerequisites: ["完成 Lesson 01", "能够进入 Hermes TUI"],
     preQuiz: { prompt: "Hermes 和普通聊天模型最关键的区别是什么？", options: [option("tools", "能在循环中调用工具", "行动结果会返回模型继续判断"), option("long", "回答更长", "长度不是 Agent 的定义"), option("persona", "有固定人格", "SOUL 只是其中一层")], correct: "tools", explanation: "Agent 的核心是可观察、可迭代的工具调用闭环。" },
     command: "hermes --tui",
     trace: ["理解任务与上下文", "选择最小工具", "审批副作用", "观察结果并验证"],
@@ -49,7 +143,7 @@ export const lessons = [
     references: [{ label: "CLI", url: "https://hermes-agent.nousresearch.com/docs/user-guide/cli" }, { label: "Tools", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/tools" }],
   },
   {
-    id: "models-profiles", number: "02", phaseId: "foundation", level: "Beginner", title: "模型与 Profile", shortTitle: "配置可替换的大脑与隔离身份", duration: "15 分钟",
+    id: "models-profiles", number: "03", phaseId: "foundation", level: "Beginner", title: "模型与 Profile", shortTitle: "配置可替换的大脑与隔离身份", duration: "15 分钟",
     summary: "区分 Provider、Model、Profile 与 SOUL，并认识 Nous Hermes 模型谱系及推理/非推理模式。",
     objective: "为研究任务选择模型来源和独立 Profile，同时把密钥与普通配置分离。",
     prerequisites: ["理解基础配置目录", "至少有一个可用 Provider"],
@@ -69,7 +163,7 @@ export const lessons = [
     references: [{ label: "Configuring Models", url: "https://hermes-agent.nousresearch.com/docs/user-guide/configuring-models" }, { label: "Hermes 4.3 model card", url: "https://huggingface.co/NousResearch/Hermes-4.3-36B" }],
   },
   {
-    id: "prompt-contracts", number: "03", phaseId: "reliable", level: "Beginner", title: "Prompt 契约", shortTitle: "把需求写成可验收的契约", duration: "16 分钟",
+    id: "prompt-contracts", number: "04", phaseId: "reliable", level: "Beginner", title: "Prompt 契约", shortTitle: "把需求写成可验收的契约", duration: "16 分钟",
     summary: "用目标、上下文、边界、输出结构和成功标准构造稳定 Prompt，并练习 JSON Schema 结构化输出。",
     objective: "把模糊请求改写成可验证 Prompt，并判断何时使用 reasoning 与结构化输出。",
     prerequisites: ["理解 Agent Loop", "能够描述任务输入与输出"],
@@ -89,7 +183,7 @@ export const lessons = [
     references: [{ label: "Hermes 4.3 structured outputs", url: "https://huggingface.co/NousResearch/Hermes-4.3-36B" }, { label: "CLI", url: "https://hermes-agent.nousresearch.com/docs/user-guide/cli" }],
   },
   {
-    id: "tools-context", number: "04", phaseId: "reliable", level: "Intermediate", title: "工具、Context 与审批", shortTitle: "组合最小且可审计的工具链", duration: "17 分钟",
+    id: "tools-context", number: "05", phaseId: "reliable", level: "Intermediate", title: "工具、Context 与审批", shortTitle: "组合最小且可审计的工具链", duration: "17 分钟",
     summary: "从任务反推 Toolset，使用 Context Files 固化项目约定，并让高风险操作经过明确审批。",
     objective: "为代码库任务选择最小工具集，区分上下文指令与长期记忆，并设置写入门。",
     prerequisites: ["能够写任务契约", "理解本地文件副作用"],
@@ -109,7 +203,7 @@ export const lessons = [
     references: [{ label: "Tools", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/tools" }, { label: "Context Files", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files" }],
   },
   {
-    id: "sessions-memory", number: "05", phaseId: "reliable", level: "Intermediate", title: "Session、Memory 与 SOUL", shortTitle: "让上下文分层而不过度记忆", duration: "16 分钟",
+    id: "sessions-memory", number: "06", phaseId: "reliable", level: "Intermediate", title: "Session、Memory 与 SOUL", shortTitle: "让上下文分层而不过度记忆", duration: "16 分钟",
     summary: "区分原始会话、压缩经验、稳定用户信息、人格原则与 Profile 隔离，设计可审查的记忆写入。",
     objective: "把不同信息放入正确层级，并通过 Memory gate 避免短期或敏感信息长期化。",
     prerequisites: ["使用过至少两个 Session", "了解 Profile"],
@@ -129,7 +223,7 @@ export const lessons = [
     references: [{ label: "Sessions", url: "https://hermes-agent.nousresearch.com/docs/user-guide/sessions" }, { label: "Memory", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/memory" }, { label: "Profiles", url: "https://hermes-agent.nousresearch.com/docs/user-guide/profiles" }],
   },
   {
-    id: "skills-plugins-mcp", number: "06", phaseId: "extensions", level: "Intermediate", title: "Skills、Plugins 与 MCP", shortTitle: "分清知识、扩展包与外部能力", duration: "19 分钟",
+    id: "skills-plugins-mcp", number: "07", phaseId: "extensions", level: "Intermediate", title: "Skills、Plugins 与 MCP", shortTitle: "分清知识、扩展包与外部能力", duration: "19 分钟",
     summary: "用 Skills 渐进披露操作知识，用 Plugins 打包扩展，用 MCP 连接外部工具，并在安装前审查权限。",
     objective: "为一个真实任务选择正确扩展机制，安装并验证一项最小能力。",
     prerequisites: ["理解 Toolset", "能够审查配置和来源"],
@@ -149,7 +243,7 @@ export const lessons = [
     references: [{ label: "Skills", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/skills" }, { label: "MCP", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp" }, { label: "Plugins", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/plugins" }],
   },
   {
-    id: "automation", number: "07", phaseId: "extensions", level: "Intermediate", title: "Gateway、Cron、Hooks 与 Batch", shortTitle: "把一次成功变成可靠自动化", duration: "20 分钟",
+    id: "automation", number: "08", phaseId: "extensions", level: "Intermediate", title: "Gateway、Cron、Hooks 与 Batch", shortTitle: "把一次成功变成可靠自动化", duration: "20 分钟",
     summary: "区分消息入口、定时触发、事件钩子和批处理，设计可追踪、可重试、有交付证据的自动化。",
     objective: "从触发、任务、工作目录到交付目标构建一个可观测的工作日早报。",
     prerequisites: ["基础聊天稳定", "已理解 Skills 与审批"],
@@ -169,7 +263,7 @@ export const lessons = [
     references: [{ label: "Cron", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/cron" }, { label: "Batch Processing", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/batch-processing" }, { label: "Hooks", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks" }],
   },
   {
-    id: "delegation-routing", number: "08", phaseId: "extensions", level: "Intermediate", title: "委派与 Provider Routing", shortTitle: "拆分独立任务并匹配模型", duration: "18 分钟",
+    id: "delegation-routing", number: "09", phaseId: "extensions", level: "Intermediate", title: "委派与 Provider Routing", shortTitle: "拆分独立任务并匹配模型", duration: "18 分钟",
     summary: "把独立子任务交给隔离 Agent，并根据复杂度、延迟和成本选择 Provider，而由主 Agent 统一验收。",
     objective: "识别可并行任务，写出自包含委派说明，并为任务选择合理路由策略。",
     prerequisites: ["理解 Profile 隔离", "能够写成功标准"],
@@ -189,7 +283,7 @@ export const lessons = [
     references: [{ label: "Delegation", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation" }, { label: "Provider Routing", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/provider-routing" }],
   },
   {
-    id: "sandbox-security", number: "09", phaseId: "production", level: "Advanced", title: "Sandbox、Egress 与 ACP", shortTitle: "把代码执行放进明确边界", duration: "21 分钟",
+    id: "sandbox-security", number: "10", phaseId: "production", level: "Advanced", title: "Sandbox、Egress 与 ACP", shortTitle: "把代码执行放进明确边界", duration: "21 分钟",
     summary: "比较 local、Docker 与 SSH 后端，使用 Egress Proxy 限制网络，并通过 ACP 把 Hermes 接入编辑器协议。",
     objective: "为不可信仓库选择隔离后端、网络策略和恢复点，并验证边界确实生效。",
     prerequisites: ["理解工具审批", "具备 Docker 或 SSH 基础"],
@@ -209,7 +303,7 @@ export const lessons = [
     references: [{ label: "Security", url: "https://hermes-agent.nousresearch.com/docs/user-guide/security" }, { label: "Docker", url: "https://hermes-agent.nousresearch.com/docs/user-guide/docker" }, { label: "ACP", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/acp" }],
   },
   {
-    id: "inference-tuning", number: "10", phaseId: "production", level: "Advanced", title: "推理、量化与微调", shortTitle: "从 Prompt 到 LoRA 与 RL 的决策阶梯", duration: "24 分钟",
+    id: "inference-tuning", number: "11", phaseId: "production", level: "Advanced", title: "推理、量化与微调", shortTitle: "从 Prompt 到 LoRA 与 RL 的决策阶梯", duration: "24 分钟",
     summary: "用 Transformers、vLLM、SGLang 与本地量化运行 Hermes 4.3，并按成本从 Prompt、Skill、SFT/LoRA 走向 Atropos RL。",
     objective: "选择合适推理方案和采样参数，并判断问题是否真的需要微调。",
     prerequisites: ["理解 Prompt 与 Skills", "了解 GPU/显存基本概念"],
@@ -229,7 +323,7 @@ export const lessons = [
     references: [{ label: "Hermes 4.3 model card", url: "https://huggingface.co/NousResearch/Hermes-4.3-36B" }, { label: "Atropos", url: "https://github.com/NousResearch/atropos" }],
   },
   {
-    id: "capstone", number: "11", phaseId: "production", level: "Advanced", title: "评测驱动毕业项目", shortTitle: "把 Hermes 工作流交付到生产边界", duration: "30 分钟",
+    id: "capstone", number: "12", phaseId: "production", level: "Advanced", title: "评测驱动毕业项目", shortTitle: "把 Hermes 工作流交付到生产边界", duration: "30 分钟",
     summary: "综合 Prompt、Tools、Memory、Automation、Delegation、Sandbox 与评测，设计一个可审计、可恢复的 PR 审查助手。",
     objective: "交付一个有基线、评测集、权限边界、失败策略与运行证据的完整工作流设计。",
     prerequisites: ["完成前三阶段", "掌握基本 Git 与测试"],
@@ -262,7 +356,7 @@ export const repositories = [
 ];
 
 export const architectureLayers = [
-  { title: "Curriculum", detail: "12 课、4 阶段课程数据，包含先修、诊断、概念、实验、课后检查与来源。" },
+  { title: "Curriculum", detail: "13 课、4 阶段课程数据，包含多端安装、先修、诊断、概念、模拟练习、实验、课后检查与来源。" },
   { title: "Learning Engine", detail: "诊断判定、练习反馈、课程完成、阶段进度与掌握度保持为前端状态机。" },
   { title: "Persistence", detail: "localStorage v2 保存完成课程、诊断结果与最近位置，并迁移 v1 数据。" },
   { title: "Safety Shell", detail: "React + Vite 浏览器模拟，不读取本机 Hermes 配置、凭据或执行真实命令。" },

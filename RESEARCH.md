@@ -10,7 +10,7 @@
 
 | AI-For-Beginners | Hermes Learning Lab |
 |---|---|
-| Course setup | Lesson 00 Setup + Doctor |
+| Course setup | Lesson 00 Download + Channels，Lesson 01 Setup + Doctor |
 | Pre-lecture quiz | 每课课前诊断 |
 | Theory / readings | 四步核心讲解 + 官方资料 |
 | Notebook / code challenge | Agent 轨迹 + 浏览器模拟题 |
@@ -24,6 +24,21 @@ Hermes 是可长期运行的 Agent harness：Provider/Model 可替换；工具�
 当前官方学习路径为 Beginner（Installation、Quickstart、CLI、Configuration）、Intermediate（Sessions、Messaging、Tools、Skills、Memory、Cron）和 Advanced（Architecture、扩展、贡献与 RL）。本课程在此基础上补入 Prompt 契约、结构化输出、恢复路径和生产评测。
 
 ## 当前配置与恢复路径
+
+安装入口按设备分层：macOS/Linux/WSL2 使用官方 shell 安装器，Windows 原生使用 PowerShell 安装器；初学者可从 Hermes Desktop 安装器开始，已有 CLI 可运行 `hermes desktop`。飞书推荐通过 Gateway 的 WebSocket 长连接接入，无需公网 URL。
+
+```bash
+# macOS / Linux / WSL2
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+
+# Windows PowerShell
+iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+
+# Desktop 与 Feishu
+hermes desktop
+hermes gateway setup
+hermes gateway
+```
 
 最小启动：
 
@@ -68,6 +83,11 @@ Prompt contract -> Skill -> SFT / LoRA -> RL with Atropos
 
 ## 采用的官方入口
 
+- [Installation](https://hermes-agent.nousresearch.com/docs/getting-started/installation)
+- [Desktop](https://hermes-agent.nousresearch.com/docs/user-guide/desktop)
+- [Windows Native](https://hermes-agent.nousresearch.com/docs/user-guide/windows-native)
+- [Windows WSL2](https://hermes-agent.nousresearch.com/docs/user-guide/windows-wsl-quickstart)
+- [Feishu](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu)
 - [Quickstart](https://hermes-agent.nousresearch.com/docs/getting-started/quickstart)
 - [Learning Path](https://hermes-agent.nousresearch.com/docs/getting-started/learning-path)
 - [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration)

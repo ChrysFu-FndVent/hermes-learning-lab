@@ -15,11 +15,41 @@ hermes gateway status
 
 ## 安装或首次聊天失败
 
+macOS/Linux/WSL2 使用 `curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash`；Windows 原生 PowerShell 使用 `iex (irm https://hermes-agent.nousresearch.com/install.ps1)`。执行安装器前应核对当前[官方安装文档](https://hermes-agent.nousresearch.com/docs/getting-started/installation)。
+
 1. 运行 `hermes doctor`，先处理阻断性检查。
 2. 用 `hermes model` 核对 Provider、模型名称和凭据。
 3. 用 `hermes config check` 检查普通配置。
 4. 仍失败时重新运行 `hermes setup`，不要同时启用扩展。
 5. 只有普通聊天通过后才恢复 Skills、MCP、Gateway 或 Cron。
+
+### macOS
+
+- `git` 不可用时先安装 Xcode Command Line Tools。
+- 安装后找不到 `hermes`，新开 Terminal 或运行 `source ~/.zshrc`。
+- Desktop 与 CLI 会共享配置；已有 CLI 可运行 `hermes desktop`。
+
+### Windows 原生与 WSL2
+
+- 原生安装脚本默认写入 `%LOCALAPPDATA%\hermes` 和用户 PATH；安装后重新打开 PowerShell。
+- WSL2 用 `wsl --list --verbose` 确认发行版 `VERSION` 为 `2`。
+- WSL 项目优先放在 Linux 文件系统（如 `~/code`），避免 `/mnt/c` 的跨文件系统开销。
+
+## Desktop 无法启动或没有会话
+
+1. 运行 `hermes doctor`，确认 CLI 基线可用。
+2. 用 `hermes desktop` 从同一套安装启动桌面端。
+3. 检查 Desktop 选择的 Profile/Model 是否与 CLI 一致。
+4. 新建会话后先完成无工具聊天，再测试 File 或 Terminal 审批。
+
+## 飞书机器人不回复
+
+1. 运行 `hermes gateway status`，必要时重新运行 `hermes gateway setup` 并选择 Feishu/Lark。
+2. 确认飞书应用已启用机器人能力，并添加 `im:message`、`im:message:send_as_bot`、`im:resource`、`im:chat`、`im:chat:readonly` 权限。
+3. 确认已订阅 `im.message.receive_v1`，连接方式为 WebSocket，并已发布应用版本。
+4. 群聊测试必须 `@Hermes`；私聊再单独验证。
+5. 生产环境设置 `FEISHU_ALLOWED_USERS`，并检查用户或群组是否在允许范围。
+6. 不要在日志、截图或聊天中暴露 App Secret。
 
 ## 配置混乱
 

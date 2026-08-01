@@ -12,7 +12,7 @@
 
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0b0b0a)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
-[![Lessons](https://img.shields.io/badge/课程-12%20课-e7a83e)](#学习路线)
+[![Lessons](https://img.shields.io/badge/课程-13%20课-e7a83e)](#学习路线)
 [![Phases](https://img.shields.io/badge/路径-4%20阶段-70b58a)](./CURRICULUM.md)
 [![Safety](https://img.shields.io/badge/运行模式-浏览器模拟-d56c62)](#安全边界)
 
@@ -49,7 +49,9 @@ Hermes Learning Lab 是一个依据 [Hermes Agent 官方文档](https://hermes-a
 
 | 学习体验 | 工程与安全 |
 |---|---|
-| 12 课、4 阶段渐进路径 | React + Vite 纯前端架构 |
+| 13 课、4 阶段渐进路径 | React + Vite 纯前端架构 |
+| macOS、Windows、WSL2 与桌面端安装导航 | 官方命令可复制，浏览器不执行 Shell |
+| 桌面端与飞书端交互模拟 | 模拟 @提及门、工具审批与无副作用反馈 |
 | 每课包含先修、诊断与实验验收 | Hermes 命令只模拟展示 |
 | 单选、多选与配置构建器 | 不读取本机配置或凭据 |
 | Agent 轨迹与即时纠错 | localStorage v2，兼容迁移 v1 |
@@ -60,10 +62,10 @@ Hermes Learning Lab 是一个依据 [Hermes Agent 官方文档](https://hermes-a
 
 | 阶段 | 课程 | 能力目标 |
 |---|---|---|
-| I 启动与基础 | 00 环境与诊断 · 01 Agent Loop · 02 模型与 Profile | 建立可工作的聊天基线，理解运行循环和配置分层 |
-| II 可靠交互 | 03 Prompt 契约 · 04 工具/Context/审批 · 05 Session/Memory/SOUL | 让任务可验收、工具可审计、上下文不过度记忆 |
-| III 扩展与自动化 | 06 Skills/Plugins/MCP · 07 Gateway/Cron/Hooks/Batch · 08 委派与路由 | 安装能力、构建自动化、拆分并路由独立任务 |
-| IV 工程化与进阶 | 09 Sandbox/Egress/ACP · 10 推理/量化/微调 · 11 毕业项目 | 隔离执行、评测模型、交付可恢复生产工作流 |
+| I 启动与基础 | 00 下载与多端接入 · 01 环境与诊断 · 02 Agent Loop · 03 模型与 Profile | 安装并完成桌面/飞书首轮体验，建立可工作的聊天基线 |
+| II 可靠交互 | 04 Prompt 契约 · 05 工具/Context/审批 · 06 Session/Memory/SOUL | 让任务可验收、工具可审计、上下文不过度记忆 |
+| III 扩展与自动化 | 07 Skills/Plugins/MCP · 08 Gateway/Cron/Hooks/Batch · 09 委派与路由 | 安装能力、构建自动化、拆分并路由独立任务 |
+| IV 工程化与进阶 | 10 Sandbox/Egress/ACP · 11 推理/量化/微调 · 12 毕业项目 | 隔离执行、评测模型、交付可恢复生产工作流 |
 
 完整先修关系、实验与成功标准见 [CURRICULUM.md](./CURRICULUM.md)。
 
@@ -91,7 +93,7 @@ npm run build
 hermes-learning-lab/
 ├── src/
 │   ├── App.jsx                 # 学习引擎、视图与进度迁移
-│   ├── data.js                 # 12 课、来源和架构数据
+│   ├── data.js                 # 13 课、安装路径、来源和架构数据
 │   └── styles.css              # 三栏工作台与响应式设计
 ├── docs/
 │   ├── labs/README.md          # 真实环境实验手册
@@ -130,7 +132,7 @@ hermes-learning-lab/
 
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0b0b0a)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
-[![Lessons](https://img.shields.io/badge/Lessons-12-e7a83e)](#learning-path)
+[![Lessons](https://img.shields.io/badge/Lessons-13-e7a83e)](#learning-path)
 [![Phases](https://img.shields.io/badge/Phases-4-70b58a)](./CURRICULUM.md)
 [![Safety](https://img.shields.io/badge/Runtime-Browser%20Simulation-d56c62)](#safety-boundaries)
 
@@ -167,7 +169,9 @@ Pre-quiz -> Core concepts -> Agent trace -> Hands-on lab -> Success criteria -> 
 
 | Learning Experience | Engineering and Safety |
 |---|---|
-| 12 lessons across 4 progressive phases | Pure React + Vite frontend |
+| 13 lessons across 4 progressive phases | Pure React + Vite frontend |
+| macOS, Windows, WSL2, and Desktop setup guides | Copyable official commands; no shell execution |
+| Desktop and Feishu interaction simulations | Mention gate, tool approval, and safe feedback practice |
 | Prerequisites, diagnostics, and lab acceptance in every lesson | Hermes commands are simulations only |
 | Single-choice, multiple-choice, and configuration builders | No access to local configuration or credentials |
 | Agent traces and targeted feedback | localStorage v2 with v1 migration |
@@ -178,10 +182,10 @@ Pre-quiz -> Core concepts -> Agent trace -> Hands-on lab -> Success criteria -> 
 
 | Phase | Lessons | Outcome |
 |---|---|---|
-| I Setup and Foundations | 00 Environment and Doctor · 01 Agent Loop · 02 Models and Profiles | Establish a working chat baseline and understand runtime/configuration layers |
-| II Reliable Interaction | 03 Prompt Contracts · 04 Tools/Context/Approval · 05 Sessions/Memory/SOUL | Make tasks testable, tools auditable, and context appropriately scoped |
-| III Extensions and Automation | 06 Skills/Plugins/MCP · 07 Gateway/Cron/Hooks/Batch · 08 Delegation and Routing | Install capabilities, automate safely, and route independent work |
-| IV Production Engineering | 09 Sandbox/Egress/ACP · 10 Inference/Quantization/Tuning · 11 Capstone | Isolate execution, evaluate models, and deliver recoverable workflows |
+| I Setup and Foundations | 00 Download and Channels · 01 Environment and Doctor · 02 Agent Loop · 03 Models and Profiles | Install Hermes, rehearse Desktop/Feishu, and establish a working chat baseline |
+| II Reliable Interaction | 04 Prompt Contracts · 05 Tools/Context/Approval · 06 Sessions/Memory/SOUL | Make tasks testable, tools auditable, and context appropriately scoped |
+| III Extensions and Automation | 07 Skills/Plugins/MCP · 08 Gateway/Cron/Hooks/Batch · 09 Delegation and Routing | Install capabilities, automate safely, and route independent work |
+| IV Production Engineering | 10 Sandbox/Egress/ACP · 11 Inference/Quantization/Tuning · 12 Capstone | Isolate execution, evaluate models, and deliver recoverable workflows |
 
 See [CURRICULUM.md](./CURRICULUM.md) for prerequisites, lab deliverables, and mastery criteria.
 

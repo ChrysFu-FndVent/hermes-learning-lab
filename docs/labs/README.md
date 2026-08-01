@@ -30,8 +30,12 @@ Profile / Model：
 
 ### 阶段 I：启动与基础
 
+- 已记录所用安装路径和官方文档版本，且没有把 App Secret 写入实验记录。
 - `hermes doctor` 无阻断错误。
 - 能在目标 Profile 完成一次无工具聊天。
+- Desktop 能创建会话、选择模型，并对一次 File 读取使用单次授权。
+- 飞书 Gateway 通过 WebSocket 连接；群聊未 `@Hermes` 时不触发，提及后可响应。
+- 飞书应用已发布，订阅 `im.message.receive_v1`，生产环境配置 `FEISHU_ALLOWED_USERS`。
 - 能解释一次工具回合中的意图、工具、审批和验证。
 - 能证明凭据和普通配置分离。
 

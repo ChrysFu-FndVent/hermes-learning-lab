@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   AlertTriangle,
+  Apple,
   ArrowLeft,
   ArrowRight,
   BookOpen,
@@ -9,21 +10,30 @@ import {
   CheckCircle2,
   ChevronRight,
   Circle,
+  Copy,
+  Download,
   ExternalLink,
   FileCode2,
   FlaskConical,
   GitFork,
   GraduationCap,
+  Laptop,
   Layers3,
   ListChecks,
   Menu,
+  MessageCircle,
+  MonitorDown,
   Play,
+  Plus,
   RefreshCcw,
+  Send,
   ShieldCheck,
+  SquareTerminal,
   Terminal,
+  Wifi,
   X,
 } from "lucide-react";
-import { architectureLayers, lessons, phases, repositories } from "./data";
+import { architectureLayers, lessons, onboardingTracks, phases, repositories } from "./data";
 
 const STORAGE_KEY = "hermes-learning-lab-progress-v2";
 const LEGACY_STORAGE_KEY = "hermes-learning-lab-progress-v1";
@@ -207,6 +217,182 @@ function BuilderFields({ fields, values, setValues }) {
   );
 }
 
+const trackIcons = {
+  desktop: MonitorDown,
+  mac: Apple,
+  windows: Laptop,
+  wsl: SquareTerminal,
+  feishu: MessageCircle,
+};
+
+function CommandBlock({ command }) {
+  const [copyState, setCopyState] = useState("idle");
+
+  const copyCommand = async () => {
+    try {
+      await navigator.clipboard.writeText(command);
+      setCopyState("copied");
+    } catch {
+      setCopyState("error");
+    }
+    window.setTimeout(() => setCopyState("idle"), 1600);
+  };
+
+  const copyLabel = copyState === "copied" ? "命令已复制" : copyState === "error" ? "复制失败，请手动选择命令" : "复制命令";
+
+  return (
+    <div className="setup-command">
+      <Terminal size={14} />
+      <code>{command}</code>
+      <button className={`icon-button copy-${copyState}`} onClick={copyCommand} aria-label={copyLabel} title={copyLabel}>
+        {copyState === "copied" ? <Check size={15} /> : copyState === "error" ? <AlertTriangle size={15} /> : <Copy size={15} />}
+      </button>
+    </div>
+  );
+}
+
+function InstallGuide() {
+  const [activeId, setActiveId] = useState("desktop");
+  const track = onboardingTracks.find((item) => item.id === activeId);
+  const TrackIcon = trackIcons[track.id];
+
+  return (
+    <section className="install-guide" aria-labelledby="install-guide-title">
+      <div className="section-heading-row">
+        <div><span className="section-label">安装导航</span><h2 id="install-guide-title">选择你的安装与接入方式</h2></div>
+        <a href="https://hermes-agent.nousresearch.com/docs/getting-started/installation" target="_blank" rel="noreferrer">官方安装文档<ExternalLink size={13} /></a>
+      </div>
+
+      <div className="install-track-tabs" role="tablist" aria-label="安装方式">
+        {onboardingTracks.map((item) => {
+          const Icon = trackIcons[item.id];
+          return (
+            <button key={item.id} role="tab" aria-selected={activeId === item.id} className={activeId === item.id ? "is-active" : ""} onClick={() => setActiveId(item.id)}>
+              <Icon size={17} /><span>{item.label}</span>{item.recommended ? <small>推荐</small> : null}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="install-track-content" role="tabpanel">
+        <div className="install-track-intro">
+          <div className="install-track-icon"><TrackIcon size={22} /></div>
+          <div><h3>{track.title}</h3><p>{track.summary}</p></div>
+        </div>
+        <ol className="install-step-list">
+          {track.steps.map((step, index) => (
+            <li key={step.title}>
+              <span>{index + 1}</span>
+              <div>
+                <strong>{step.title}</strong>
+                <p>{step.body}</p>
+                {step.command ? <CommandBlock command={step.command} /> : null}
+                {step.url ? <a className="inline-action" href={step.url} target="_blank" rel="noreferrer"><Download size={14} />{step.action}<ExternalLink size={12} /></a> : null}
+              </div>
+            </li>
+          ))}
+        </ol>
+        <div className="install-verify"><CheckCircle2 size={17} /><div><strong>完成标志</strong><span>{track.verify}</span></div><a href={track.docs} target="_blank" rel="noreferrer" aria-label={`查看 ${track.label} 官方文档`}><ExternalLink size={15} /></a></div>
+      </div>
+    </section>
+  );
+}
+
+function DesktopSimulator() {
+  const [stage, setStage] = useState(0);
+  const [model, setModel] = useState("");
+
+  const reset = () => {
+    setStage(0);
+    setModel("");
+  };
+
+  return (
+    <div className="desktop-simulator">
+      <div className="sim-window-bar"><span /><span /><span /><strong>Hermes Desktop · 模拟</strong></div>
+      <div className="desktop-sim-layout">
+        <aside>
+          <div className="sim-brand"><Bot size={16} />Hermes</div>
+          <button onClick={() => setStage(1)} disabled={stage > 0}><Plus size={14} />新建会话</button>
+          <span className={stage > 0 ? "is-active" : ""}>安装体验</span>
+          <small>今天</small>
+        </aside>
+        <div className="desktop-sim-main">
+          <header>
+            <div><strong>{stage === 0 ? "尚未创建会话" : "安装体验"}</strong><small>{model || "请选择模型"}</small></div>
+            <label>模型<select aria-label="桌面模拟模型" value={model} disabled={stage === 0 || stage >= 3} onChange={(event) => { setModel(event.target.value); if (event.target.value) setStage(2); }}><option value="">请选择</option><option value="Hermes 4.3">Hermes 4.3</option><option value="Portal Auto">Portal Auto</option></select></label>
+          </header>
+          <div className="desktop-sim-chat">
+            {stage === 0 ? <div className="sim-empty"><MonitorDown size={25} /><strong>从一个新会话开始</strong><span>桌面端与 CLI 共享相同配置和会话。</span></div> : null}
+            {stage >= 1 ? <div className="sim-message is-system"><Bot size={15} /><p>新会话已创建。选择一个模型后即可发送任务。</p></div> : null}
+            {stage >= 3 ? <div className="sim-message is-user"><p>请读取当前项目的 README，并给出三点改进建议。</p></div> : null}
+            {stage === 3 ? (
+              <div className="sim-approval">
+                <div><ShieldCheck size={17} /><span><strong>请求工具权限</strong><small>File · 读取 README.md</small></span></div>
+                <div><button className="secondary-action" onClick={() => setStage(2)}>拒绝</button><button className="primary-button" onClick={() => setStage(4)}>仅允许本次</button></div>
+              </div>
+            ) : null}
+            {stage >= 4 ? <div className="sim-message is-system"><Bot size={15} /><p>读取完成。建议补充安装前提、飞书权限清单和失败恢复步骤；未修改任何文件。</p></div> : null}
+          </div>
+          <footer>
+            {stage === 2 ? <button className="primary-button" onClick={() => setStage(3)}><Send size={14} />发送示例任务</button> : null}
+            {stage === 0 ? <span>先点击左侧“新建会话”</span> : null}
+            {stage === 1 ? <span>下一步：从右上角选择模型</span> : null}
+            {stage === 3 ? <span>审查工具、路径与权限范围</span> : null}
+            {stage === 4 ? <><span className="is-complete"><CheckCircle2 size={14} />桌面端练习完成</span><button className="text-button" onClick={reset}><RefreshCcw size={13} />重新练习</button></> : null}
+          </footer>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FeishuSimulator() {
+  const [stage, setStage] = useState("ready");
+
+  const sendMention = () => setStage("approval");
+  const reset = () => setStage("ready");
+
+  return (
+    <div className="feishu-simulator">
+      <div className="feishu-header"><div className="feishu-logo"><MessageCircle size={18} /></div><div><strong>项目协作群</strong><span><Wifi size={12} />Hermes Gateway 已连接</span></div></div>
+      <div className="feishu-chat">
+        <div className="feishu-message"><span className="avatar is-user">陈</span><div><strong>陈晓</strong><p>今天的项目周报已经上传。</p></div></div>
+        {stage === "ignored" ? <div className="feishu-message"><span className="avatar is-user">你</span><div><strong>你</strong><p>帮我总结项目周报</p><small>机器人没有响应：群聊默认要求 @提及。</small></div></div> : null}
+        {["approval", "complete", "denied"].includes(stage) ? <div className="feishu-message"><span className="avatar is-user">你</span><div><strong>你</strong><p><b>@Hermes</b> 帮我总结项目周报</p></div></div> : null}
+        {["approval", "denied"].includes(stage) ? (
+          <div className="feishu-message is-bot"><span className="avatar is-bot"><Bot size={15} /></span><div className="feishu-card"><strong>Hermes 请求授权</strong><p>需要读取群文件《项目周报.md》以生成摘要。</p><dl><div><dt>工具</dt><dd>Feishu File</dd></div><div><dt>范围</dt><dd>仅此文件</dd></div></dl>{stage === "denied" ? <small>已拒绝，本次未读取文件。</small> : <div className="feishu-card-actions"><button onClick={() => setStage("denied")}>拒绝</button><button onClick={() => setStage("complete")}>仅允许这一次</button></div>}</div></div>
+        ) : null}
+        {stage === "complete" ? <div className="feishu-message is-bot"><span className="avatar is-bot"><Bot size={15} /></span><div><strong>Hermes</strong><p>周报摘要：本周完成登录重构；当前阻塞为测试环境配额；下周优先完成灰度发布。</p><small className="delivery-state"><CheckCircle2 size={12} />已完成 · 未修改群文件</small></div></div> : null}
+      </div>
+      <div className="feishu-actions">
+        {stage === "ready" ? <><button className="secondary-action" onClick={() => setStage("ignored")}>直接发送</button><button className="primary-button" onClick={sendMention}><Send size={14} />@Hermes 发送</button></> : null}
+        {stage === "ignored" ? <><span>观察到 Mention Gate：未 @ 不触发。</span><button className="primary-button" onClick={sendMention}>改为 @Hermes 发送</button></> : null}
+        {stage === "approval" ? <span>在消息卡片中审查工具和范围。</span> : null}
+        {stage === "denied" ? <><span>拒绝不会产生副作用。</span><button className="text-button" onClick={reset}><RefreshCcw size={13} />重新练习</button></> : null}
+        {stage === "complete" ? <><span className="is-complete"><CheckCircle2 size={14} />飞书端练习完成</span><button className="text-button" onClick={reset}><RefreshCcw size={13} />重新练习</button></> : null}
+      </div>
+    </div>
+  );
+}
+
+function InteractionPractice() {
+  const [surface, setSurface] = useState("desktop");
+  return (
+    <section className="surface-practice" aria-labelledby="surface-practice-title">
+      <div className="section-heading-row">
+        <div><span className="section-label">多端模拟练习</span><h2 id="surface-practice-title">先在安全沙盒熟悉操作</h2></div>
+        <div className="surface-switch" role="tablist" aria-label="模拟终端">
+          <button role="tab" aria-selected={surface === "desktop"} className={surface === "desktop" ? "is-active" : ""} onClick={() => setSurface("desktop")}><MonitorDown size={15} />桌面端</button>
+          <button role="tab" aria-selected={surface === "feishu"} className={surface === "feishu" ? "is-active" : ""} onClick={() => setSurface("feishu")}><MessageCircle size={15} />飞书端</button>
+        </div>
+      </div>
+      <p className="surface-intro">{surface === "desktop" ? "依次完成新建会话、选择模型、发送任务和最小权限审批。" : "体验群聊 @提及门、文件读取审批和结果交付。"}</p>
+      {surface === "desktop" ? <DesktopSimulator /> : <FeishuSimulator />}
+    </section>
+  );
+}
+
 function LabBrief({ lab }) {
   return (
     <section className="lab-brief" aria-labelledby="lab-title">
@@ -307,6 +493,7 @@ function CourseView({ lesson, lessonIndex, completed, diagnostic, onDiagnose, on
         <div className="prerequisite-line"><strong>先修</strong>{lesson.prerequisites.map((item) => <span key={item}>{item}</span>)}</div>
       </section>
 
+      {lesson.id === "installation-channels" ? <><InstallGuide /><InteractionPractice /></> : null}
       <PreQuiz lesson={lesson} result={diagnostic} onResult={(passed) => onDiagnose(lesson.id, passed)} />
       <TracePanel lesson={lesson} />
 
@@ -412,7 +599,7 @@ function ArchitectureView() {
       <section className="architecture-table-section">
         <h2>技术架构与边界</h2>
         <div className="architecture-table">
-          <div><strong>内容</strong><span>12 课 / 4 阶段；官方资料链接到课，不把时效性命令埋在长文中</span></div>
+          <div><strong>内容</strong><span>13 课 / 4 阶段；安装命令和时效性配置均链接当前官方资料</span></div>
           <div><strong>交互</strong><span>课前诊断 + 四步讲解 + 实验说明 + 课后检查 + 即时反馈</span></div>
           <div><strong>状态</strong><span>localStorage v2；兼容迁移原 v1 完成记录</span></div>
           <div><strong>安全</strong><span>命令均为模拟展示；不访问 Shell、~/.hermes、凭据或外部消息平台</span></div>
