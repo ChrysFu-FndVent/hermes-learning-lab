@@ -15,8 +15,8 @@ The first release uses a deterministic browser-side simulation and stores only c
 ## Consequences
 
 - Positive: zero setup, repeatable exercises, no credential handling, no modification of the learner's Hermes environment.
-- Negative: cannot validate the learner's real provider, MCP, Gateway, or terminal setup.
-- Neutral: a future read-only diagnostics adapter can be added behind a separate explicit connection flow.
+- Negative: simulation alone cannot validate the learner's real provider, MCP, Gateway, or terminal setup.
+- Neutral: [ADR 0002](./0002-explicit-read-only-local-verification.md) adds a separate, explicit read-only check for CLI/Desktop/Gateway presence without changing the simulation default.
 
 ## Alternatives considered
 

@@ -12,7 +12,7 @@
 课前诊断 -> 四步讲解 -> 工具轨迹 -> 实验任务/输入/步骤/成功标准 -> 课后检查 -> 反馈与资料
 ```
 
-低风险诊断用于激活知识，不锁课；课后检查通过才计入掌握度。真实实验与浏览器模拟分开，避免学习应用触碰本机 Hermes 环境。
+低风险诊断用于激活知识，不锁课；课后检查通过才计入掌握度。真实实验与浏览器模拟分开；只有学习者点击本机检测时，Vite 才运行最小化只读探针。
 
 ## 信息架构
 
@@ -29,6 +29,8 @@
 | `data.js` | 阶段、课程、诊断、实验、练习、来源 | 静态数据 |
 | `InstallGuide` | 桌面、macOS、Windows、WSL2 与飞书的分路径引导 | `activeId` |
 | `InteractionPractice` | Desktop 与 Feishu 的安全交互模拟 | `surface`, `stage` |
+| `RealInterfaceGuide` | 官方 Desktop 实景标注、飞书双路径 UI 指南与真实操作步骤 | `surface`, `activeId` |
+| `LocalOperationVerifier` | 显式本机只读检测与浏览器内回执判定 | `probeState`, `receiptState` |
 | `CourseSidebar` | 阶段化目录和完成状态 | `activeLesson`, `completed` |
 | `PreQuiz` | 课前诊断与即时解释 | `diagnostics` |
 | `CourseView` | 四步讲解、轨迹、资源和导航 | `stepIndex` |
@@ -39,14 +41,15 @@
 
 ## 用户流程
 
-1. 用户从 Lesson 00 选择设备与安装路径，先完成 Desktop 与 Feishu 模拟。
-2. 用户执行 Setup、Doctor 和普通聊天，建立基础基线。
-3. 课前诊断暴露已有理解，不影响继续学习。
-4. 用户观察四段 Agent 轨迹并完成四步概念讲解。
-5. 实验区明确真实任务、输入、步骤和成功标准。
-6. 浏览器课后检查给出成功或纠错反馈。
-7. 通过后记录完成状态；真实实验仍需用户在隔离环境按成功标准验收。
-8. 阶段完成后进入下一层；毕业项目综合安全、评测和恢复。
+1. 用户从 Lesson 00 选择设备与安装路径，完成 Desktop 与 Feishu 模拟。
+2. 用户对照官方 Desktop 实景标注和飞书双路径指南认识真实界面。
+3. 用户在真实应用中执行校验 Prompt，并主动提交回执；需要时点击本机只读检测。
+4. 用户执行 Setup、Doctor 和普通聊天，建立基础基线。
+5. 课前诊断暴露已有理解，不影响继续学习。
+6. 用户观察四段 Agent 轨迹并完成四步概念讲解。
+7. 实验区明确真实任务、输入、步骤和成功标准。
+8. 浏览器课后检查给出成功或纠错反馈；真实实验仍按 Success Criteria 验收。
+9. 阶段完成后进入下一层；毕业项目综合安全、评测和恢复。
 
 ## 技术架构
 
@@ -57,13 +60,17 @@ flowchart LR
     C --> D[诊断与课后判定]
     D --> E[localStorage v2]
     C --> F[实验手册与资料视图]
+    C --> G[用户主动回执]
+    C --> H[Vite 本地只读状态探针]
 ```
 
 - React + Vite；当前规模使用局部状态，无需额外状态库。
 - Lucide React 提供一致图标。
 - `hermes-learning-lab-progress-v2` 保存课程 ID、诊断结果和最近位置。
 - 读取不到 v2 时迁移 `hermes-learning-lab-progress-v1` 的完成数据。
-- 所有命令都是字符串，不存在 Shell、文件系统或凭据连接。
+- 教学命令仍是字符串；唯一命令执行面是用户点击后触发的本地只读探针。
+- 探针仅检查 Hermes 命令是否存在、Desktop 进程和 `gateway status`，响应只包含布尔值与检测时间。
+- 不读取配置、密钥、会话、日志或消息；不启动/停止 Desktop 或 Gateway。
 
 ## 视觉与响应式
 

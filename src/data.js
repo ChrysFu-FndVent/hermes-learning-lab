@@ -81,6 +81,62 @@ export const onboardingTracks = [
   },
 ];
 
+export const surfaceGuides = {
+  desktop: {
+    label: "Hermes Desktop",
+    title: "从课程界面切换到真实 Desktop",
+    summary: "先认识真实窗口中的稳定地标，再在同一个 Agent 运行时里完成新会话、模型确认、消息发送与工具审批。",
+    image: "/ui-reference/hermes-desktop-official.png",
+    imageAlt: "NousResearch 官方 Hermes Desktop 界面，左侧为导航和会话，中间为聊天区，底部为输入框与状态栏",
+    sourceLabel: "官方仓库界面实景",
+    sourceUrl: "https://github.com/NousResearch/hermes-agent/blob/main/apps/desktop/pr-assets/session-source-folders.png",
+    sourceNote: "界面来自 NousResearch/hermes-agent 官方仓库；具体文案和位置可能随 Desktop 更新变化。",
+    hotspots: [
+      { id: "new", number: "1", label: "New session", detail: "左上角创建会话；创建后会话会出现在左侧 Sessions 列表。", x: 4, y: 6 },
+      { id: "tools", number: "2", label: "Skills & Tools", detail: "进入能力管理；真实任务前确认只启用所需工具。", x: 8, y: 10.5 },
+      { id: "messaging", number: "3", label: "Messaging", detail: "进入消息平台管理；飞书接入状态与 Gateway 配置从这里查看。", x: 12, y: 15 },
+      { id: "composer", number: "4", label: "消息输入框", detail: "底部 Composer 用于发任务、拖入附件和查看排队消息。", x: 49, y: 94 },
+      { id: "status", number: "5", label: "连接与模型状态", detail: "底部状态栏确认 Gateway ready、当前模型与上下文状态。", x: 79, y: 98 },
+    ],
+    steps: [
+      { title: "启动并确认连接", body: "运行 hermes desktop。等待窗口底部出现可用连接状态，不要在启动遮罩仍存在时发送任务。" },
+      { title: "创建独立会话", body: "点击左上角 New session；确认新会话出现在 Sessions 中，避免把练习混入生产会话。" },
+      { title: "先做无工具回执", body: "在 Composer 发送校验 Prompt。先证明模型与会话工作，再练习 File 或 Terminal。" },
+      { title: "审查一次工具请求", body: "发送只读任务，核对工具、目标路径和范围；首次审批选择 Allow Once / 仅允许一次。" },
+    ],
+    verificationPrompt: "请只回复 DESKTOP_OK，不要调用任何工具。",
+    expected: "DESKTOP_OK",
+    docs: "https://hermes-agent.nousresearch.com/docs/user-guide/desktop",
+  },
+  feishu: {
+    label: "飞书端",
+    title: "从开发者控制台走到真实群聊",
+    summary: "配置侧负责让事件和卡片可达，飞书客户端负责 @提及、审批与接收结果；两条路径都通过才算接入完成。",
+    sourceLabel: "官方飞书接入文档",
+    sourceUrl: "https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu",
+    sourceNote: "飞书菜单名称可能因企业版本略有差异；事件名、权限 Scope 和 Hermes 行为以官方文档为准。",
+    routes: [
+      {
+        title: "开发者控制台",
+        steps: ["应用列表 → 凭证与基础信息", "权限管理 → 导入必需 Scope", "事件与回调 → WebSocket 长连接", "订阅 im.message.receive_v1 与 card.action.trigger", "应用功能 → 机器人 → 启用交互式卡片", "版本管理 → 创建并发布版本"],
+      },
+      {
+        title: "飞书客户端",
+        steps: ["进入机器人私聊或已添加机器人的群聊", "群聊输入 @Hermes，确认提及变为蓝色实体", "发送校验 Prompt，观察 Typing 表情", "危险命令出现审批卡时先核对工具与范围", "首次操作选择允许一次，并检查最终结果"],
+      },
+    ],
+    steps: [
+      { title: "先验证私聊", body: "私聊会响应每一条消息，适合先排除 @提及门和群组策略带来的变量。" },
+      { title: "再验证群聊提及", body: "群聊默认只有显式 @Hermes 才触发；普通文本没有回复是预期行为。" },
+      { title: "观察处理状态", body: "Agent 工作时会在消息上显示 Typing 表情，完成后清除；失败时可能显示 CrossMark。" },
+      { title: "验证原生审批卡", body: "卡片按钮报 200340 时，检查 card.action.trigger、交互式卡片能力与应用版本是否已发布。" },
+    ],
+    verificationPrompt: "@Hermes 请只回复 FEISHU_OK，不要调用任何工具。",
+    expected: "FEISHU_OK",
+    docs: "https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu",
+  },
+};
+
 export const lessons = [
   {
     id: "installation-channels", number: "00", phaseId: "foundation", level: "Beginner", title: "下载与多端接入", shortTitle: "安装 Hermes，并完成桌面与飞书首轮体验",
@@ -96,10 +152,10 @@ export const lessons = [
       { title: "桌面端共享运行时", body: "hermes desktop 会复用当前配置、密钥、Sessions 与 Skills。桌面端是操作界面，不是另一套独立 Agent。" },
       { title: "飞书走 Gateway", body: "推荐 WebSocket 长连接，不需要公网地址。群聊默认要求 @机器人；生产使用必须限制用户和群组范围。" },
     ],
-    checkpoints: ["选择安装路径", "完成 Doctor 验收", "完成桌面模拟", "完成飞书模拟"],
-    lab: { task: "完成一个从安装到飞书消息的端到端冒烟测试。", input: "一台 macOS/Windows 设备、可用 Provider、飞书企业自建应用或扫码创建权限。", procedure: ["选择并执行对应安装路径", "运行 Setup、Doctor 和一次普通聊天", "在桌面端完成新会话与单次审批", "运行 gateway setup 并选择 Feishu/Lark", "发布飞书应用并在群聊 @Hermes"], successCriteria: ["CLI 与桌面端共享会话", "Doctor 无阻断错误", "飞书只响应允许用户和有效 @提及", "App Secret 未出现在聊天或截图中"] },
+    checkpoints: ["选择安装路径", "识别真实界面地标", "完成本机检测或回执", "验证飞书审批链路"],
+    lab: { task: "完成一个从安装到飞书消息的端到端冒烟测试。", input: "一台 macOS/Windows 设备、可用 Provider、飞书企业自建应用或扫码创建权限。", procedure: ["选择并执行对应安装路径", "运行 Setup、Doctor 和一次普通聊天", "对照官方实景图，在 Desktop 新建独立会话并完成 DESKTOP_OK 回执", "运行 gateway setup 并选择 Feishu/Lark", "发布飞书应用并在群聊 @Hermes 完成 FEISHU_OK 回执", "触发一次测试审批卡并选择仅允许一次"], successCriteria: ["CLI 与桌面端共享会话", "能定位 Desktop 的会话、消息、工具与连接状态", "Doctor 无阻断错误", "飞书只响应允许用户和有效 @提及", "审批卡可点击且没有 200340", "App Secret 未出现在聊天或截图中"] },
     practice: { type: "choice", prompt: "Hermes 运行在个人电脑且没有公网 URL，连接飞书应该优先选择什么？", options: [option("websocket", "WebSocket 长连接", "出站连接，无需公网入口"), option("webhook", "公开 Webhook", "需要可达 HTTP 地址"), option("poll", "每分钟轮询", "不是官方推荐连接方式")], correct: "websocket", success: "正确。个人电脑或私有服务器优先使用 WebSocket 长连接。", hint: "选择不要求公网 URL、由 Hermes 主动建立的连接方式。" },
-    takeaways: ["先建立可工作的本地聊天", "桌面和飞书共享同一个 Hermes 运行时"], troubleshooting: "命令不可用时先刷新 PATH；飞书不回复时检查应用是否已发布、im.message.receive_v1、Gateway 状态、@提及和用户白名单。",
+    takeaways: ["先通过界面地标建立真实操作路径", "桌面和飞书共享同一个 Hermes 运行时"], troubleshooting: "命令不可用时先刷新 PATH；飞书不回复时检查应用发布、im.message.receive_v1、Gateway、@提及和白名单；审批卡报 200340 时检查 card.action.trigger 与交互式卡片能力。",
     references: [{ label: "Installation", url: "https://hermes-agent.nousresearch.com/docs/getting-started/installation" }, { label: "Desktop", url: "https://hermes-agent.nousresearch.com/docs/user-guide/desktop" }, { label: "Windows Native", url: "https://hermes-agent.nousresearch.com/docs/user-guide/windows-native" }, { label: "Feishu", url: "https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu" }],
   },
   {
@@ -251,7 +307,7 @@ export const lessons = [
     command: "hermes gateway status",
     trace: ["Gateway 接收或保持连接", "Cron/Hook/Batch 触发", "Agent 执行并验证", "结果路由并记录状态"],
     steps: [
-      { title: "选择正确触发器", body: "Gateway 是消息入口，Cron 处理时间计划，Hook 响应事件，Batch 处理成组输入。不要用定时轮询替代明确事件。" },
+      { title: "选择正确触发器", body: "Gateway 是消息入口，Cron 处理时间计划，Hook 响应事件，Batch 处理成组输入。飞书可从 Desktop 的 Messaging 页面观察连接，再回到群聊用 @提及验证真实入口。" },
       { title: "自动化任务要自包含", body: "保存 schedule/trigger、prompt、Profile、工作目录、Skills、超时和 delivery，避免依赖某次交互里的隐含上下文。" },
       { title: "保留幂等性", body: "任务重试不能重复发消息或覆盖数据。为输出加入日期/任务 ID，并在写入前检查是否已经完成。" },
       { title: "交付必须可追踪", body: "记录触发、运行、验证、发送四种状态和失败原因，给人工提供重跑与停用路径。" },
@@ -260,7 +316,7 @@ export const lessons = [
     lab: { task: "创建工作日项目早报。", input: "工作日 09:00、项目目录、状态汇总 Prompt、Telegram 目标。", procedure: ["先在普通聊天中跑通 Prompt", "创建 Cron 并固定 Profile/目录", "配置 Telegram delivery", "模拟失败并查看历史"], successCriteria: ["同一天重跑不重复发送", "失败记录可查询", "停用和手动重跑路径明确"] },
     practice: { type: "builder", prompt: "构建工作日 09:00 的项目早报，并发送到 Telegram。", fields: [{ id: "schedule", label: "Schedule", type: "select", options: ["weekdays at 09:00", "every 5m", "daily at 23:00"] }, { id: "delivery", label: "Delivery", type: "select", options: ["Telegram", "CLI only", "Discord"] }, { id: "task", label: "Task", type: "text", placeholder: "汇总状态、阻塞项和今日计划" }], expected: { schedule: "weekdays at 09:00", delivery: "Telegram" }, commandTemplate: ({ schedule, delivery, task }) => `hermes cron create "${schedule || "<schedule>"}" "${task || "<task>"}"  # ${delivery || "<target>"}`, success: "自动化具备明确时间、任务和交付目标。", hint: "题目指定工作日 09:00 与 Telegram，Task 也不能为空。" },
     takeaways: ["触发、执行、交付是不同状态", "先手动跑通再自动化"], troubleshooting: "任务未送达时先查 gateway status 与 Cron 历史，区分未触发、执行失败和 delivery 失败。",
-    references: [{ label: "Cron", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/cron" }, { label: "Batch Processing", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/batch-processing" }, { label: "Hooks", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks" }],
+    references: [{ label: "Cron", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/cron" }, { label: "Batch Processing", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/batch-processing" }, { label: "Hooks", url: "https://hermes-agent.nousresearch.com/docs/user-guide/features/hooks" }, { label: "Feishu", url: "https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu" }],
   },
   {
     id: "delegation-routing", number: "09", phaseId: "extensions", level: "Intermediate", title: "委派与 Provider Routing", shortTitle: "拆分独立任务并匹配模型",
@@ -359,5 +415,5 @@ export const architectureLayers = [
   { title: "Curriculum", detail: "13 课、4 阶段课程数据，包含多端安装、先修、诊断、概念、模拟练习、实验、课后检查与来源。" },
   { title: "Learning Engine", detail: "诊断判定、练习反馈、课程完成、阶段进度与掌握度保持为前端状态机。" },
   { title: "Persistence", detail: "localStorage v2 保存完成课程、诊断结果与最近位置，并迁移 v1 数据。" },
-  { title: "Safety Shell", detail: "React + Vite 浏览器模拟，不读取本机 Hermes 配置、凭据或执行真实命令。" },
+  { title: "Safety Shell", detail: "React 浏览器模拟默认无副作用；本地 Vite 仅在用户点击时执行只读状态探针，不返回配置、凭据、日志或消息。" },
 ];

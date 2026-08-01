@@ -35,7 +35,7 @@ flowchart TD
 
 | 课 | 等级 | 核心问题 | 实验交付物 |
 |---:|---|---|---|
-| 00 | Beginner | macOS/Windows/WSL2 如何安装并接入桌面与飞书？ | 多端安装、Desktop 与 Feishu 冒烟记录 |
+| 00 | Beginner | macOS/Windows/WSL2 如何安装并接入桌面与飞书？ | 多端安装、真实界面地标、Desktop/Feishu 回执与审批记录 |
 | 01 | Beginner | 如何证明 Hermes 基础环境可用？ | Setup/首次聊天/Doctor 验收记录 |
 | 02 | Beginner | Agent 如何从意图进入行动闭环？ | 只读盘点与单次写入审批记录 |
 | 03 | Beginner | Provider、Model、Profile、SOUL 如何分层？ | 隔离研究 Profile 配置 |
@@ -54,6 +54,8 @@ flowchart TD
 - 课前诊断只记录 `correct` 或 `review`，不锁定内容。
 - 课后检查通过后课程计入总掌握度。
 - 浏览器通过只证明关键判断正确；真实实验还需满足每课 Success Criteria。
+- Lesson 00 的本机状态检测必须由学习者显式触发，只返回安装、进程与 Gateway 三类布尔状态。
+- 真实回执不得包含 App Secret、Token、用户 ID、聊天历史或个人路径。
 - 毕业标准建议为：13 个课后检查通过、13 个实验记录完成、毕业项目评测与回滚演练通过。
 
 ## 内容维护规范

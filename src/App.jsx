@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ChevronRight,
   Circle,
+  ClipboardCheck,
   Copy,
   Download,
   ExternalLink,
@@ -22,18 +23,20 @@ import {
   ListChecks,
   Menu,
   MessageCircle,
+  MousePointerClick,
   MonitorDown,
   Play,
   Plus,
   RefreshCcw,
   Send,
   ShieldCheck,
+  ScanLine,
   SquareTerminal,
   Terminal,
   Wifi,
   X,
 } from "lucide-react";
-import { architectureLayers, lessons, onboardingTracks, phases, repositories } from "./data";
+import { architectureLayers, lessons, onboardingTracks, phases, repositories, surfaceGuides } from "./data";
 
 const STORAGE_KEY = "hermes-learning-lab-progress-v2";
 const LEGACY_STORAGE_KEY = "hermes-learning-lab-progress-v1";
@@ -298,6 +301,140 @@ function InstallGuide() {
   );
 }
 
+function DesktopInterfaceReference({ guide }) {
+  const [activeId, setActiveId] = useState(guide.hotspots[0].id);
+  const active = guide.hotspots.find((item) => item.id === activeId);
+
+  return (
+    <div className="desktop-reference">
+      <div className="reference-image-wrap">
+        <img src={guide.image} alt={guide.imageAlt} />
+        {guide.hotspots.map((item) => (
+          <button
+            key={item.id}
+            className={`reference-marker ${activeId === item.id ? "is-active" : ""}`}
+            style={{ left: `${item.x}%`, top: `${item.y}%` }}
+            onClick={() => setActiveId(item.id)}
+            aria-label={`查看界面位置 ${item.number}：${item.label}`}
+          >
+            {item.number}
+          </button>
+        ))}
+      </div>
+      <div className="reference-legend">
+        {guide.hotspots.map((item) => (
+          <button key={item.id} className={activeId === item.id ? "is-active" : ""} onClick={() => setActiveId(item.id)}>
+            <span>{item.number}</span><strong>{item.label}</strong>
+          </button>
+        ))}
+        <div className="reference-detail"><MousePointerClick size={16} /><div><strong>{active.label}</strong><p>{active.detail}</p></div></div>
+      </div>
+    </div>
+  );
+}
+
+function FeishuInterfaceReference({ guide }) {
+  return (
+    <div className="feishu-route-reference">
+      {guide.routes.map((route) => (
+        <article key={route.title}>
+          <div className="route-heading"><span>{route.title === "开发者控制台" ? "CONFIG" : "CLIENT"}</span><h3>{route.title}</h3></div>
+          <ol>
+            {route.steps.map((step, index) => <li key={step}><span>{index + 1}</span><p>{step}</p></li>)}
+          </ol>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function LocalOperationVerifier({ surface, guide }) {
+  const [probeState, setProbeState] = useState("idle");
+  const [probe, setProbe] = useState(null);
+  const [receipt, setReceipt] = useState("");
+  const [receiptState, setReceiptState] = useState("idle");
+
+  const runProbe = async () => {
+    setProbeState("running");
+    try {
+      const response = await fetch("/api/local-verification", { cache: "no-store" });
+      if (!response.ok) throw new Error("probe unavailable");
+      const result = await response.json();
+      setProbe(result);
+      setProbeState("done");
+    } catch {
+      setProbe(null);
+      setProbeState("unavailable");
+    }
+  };
+
+  const verifyReceipt = () => {
+    setReceiptState(receipt.trim().toUpperCase() === guide.expected ? "success" : "error");
+  };
+
+  const probeItems = probe ? [
+    { label: "Hermes CLI", value: probe.hermesInstalled, detail: probe.hermesInstalled ? "已在 PATH 中发现" : "未在 PATH 中发现" },
+    { label: "Desktop 进程", value: probe.desktopRunning, detail: probe.desktopRunning ? "应用正在运行" : "未检测到运行进程" },
+    { label: "Gateway", value: probe.gatewayRunning, detail: probe.gatewayRunning ? "状态为运行中" : "未确认运行状态" },
+  ] : [];
+
+  return (
+    <div className="real-verifier">
+      <div className="probe-panel">
+        <div className="verifier-heading"><ScanLine size={17} /><div><strong>本机只读检测</strong><span>仅在点击时检查命令、Desktop 进程和 Gateway 状态</span></div></div>
+        <button className="secondary-action" onClick={runProbe} disabled={probeState === "running"}>{probeState === "running" ? "检测中…" : "检测本机状态"}</button>
+        {probeState === "idle" ? <p className="probe-note">不会读取配置文件、密钥、会话或飞书消息。</p> : null}
+        {probeState === "unavailable" ? <p className="probe-feedback is-error"><AlertTriangle size={14} />当前运行模式未提供本地检测，可继续使用右侧回执验收。</p> : null}
+        {probeState === "done" ? (
+          <div className="probe-results">
+            {probeItems.map((item) => <div key={item.label} className={item.value ? "is-success" : ""}>{item.value ? <CheckCircle2 size={15} /> : <Circle size={15} />}<span><strong>{item.label}</strong><small>{item.detail}</small></span></div>)}
+          </div>
+        ) : null}
+      </div>
+
+      <div className="receipt-panel">
+        <div className="verifier-heading"><ClipboardCheck size={17} /><div><strong>真实回执验收</strong><span>在 {surface === "desktop" ? "Hermes Desktop" : "飞书"} 执行，再粘贴 Agent 的完整回复</span></div></div>
+        <CommandBlock command={guide.verificationPrompt} />
+        <label><span>Hermes 回复</span><input value={receipt} onChange={(event) => { setReceipt(event.target.value); setReceiptState("idle"); }} placeholder={`预期仅返回 ${guide.expected}`} /></label>
+        <div className="receipt-actions">
+          <span className={`probe-feedback is-${receiptState}`} aria-live="polite">
+            {receiptState === "idle" ? "只粘贴回复，不要粘贴 Prompt 或任何凭据。" : null}
+            {receiptState === "success" ? <><CheckCircle2 size={14} />回执匹配，真实消息链路已通过。</> : null}
+            {receiptState === "error" ? <><AlertTriangle size={14} />回执不匹配；检查模型响应、@提及或 Gateway 状态。</> : null}
+          </span>
+          <button className="primary-button" onClick={verifyReceipt} disabled={!receipt.trim()}>验证回执</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function RealInterfaceGuide() {
+  const [surface, setSurface] = useState("desktop");
+  const guide = surfaceGuides[surface];
+
+  return (
+    <section className="real-interface-guide" aria-labelledby="real-interface-title">
+      <div className="section-heading-row">
+        <div><span className="section-label">真实界面陪练</span><h2 id="real-interface-title">从页面地标到真实操作回执</h2></div>
+        <div className="surface-switch" role="tablist" aria-label="真实界面指南">
+          <button role="tab" aria-selected={surface === "desktop"} className={surface === "desktop" ? "is-active" : ""} onClick={() => setSurface("desktop")}><MonitorDown size={15} />Desktop</button>
+          <button role="tab" aria-selected={surface === "feishu"} className={surface === "feishu" ? "is-active" : ""} onClick={() => setSurface("feishu")}><MessageCircle size={15} />飞书</button>
+        </div>
+      </div>
+
+      <div className="real-interface-intro"><div><strong>{guide.title}</strong><p>{guide.summary}</p></div><a href={guide.docs} target="_blank" rel="noreferrer">打开官方操作文档<ExternalLink size={13} /></a></div>
+      {surface === "desktop" ? <DesktopInterfaceReference guide={guide} /> : <FeishuInterfaceReference guide={guide} />}
+
+      <div className="real-operation-steps">
+        {guide.steps.map((step, index) => <article key={step.title}><span>{String(index + 1).padStart(2, "0")}</span><div><strong>{step.title}</strong><p>{step.body}</p></div></article>)}
+      </div>
+      <div className="reference-source"><ShieldCheck size={15} /><span>{guide.sourceNote}</span><a href={guide.sourceUrl} target="_blank" rel="noreferrer">{guide.sourceLabel}<ExternalLink size={12} /></a></div>
+      <LocalOperationVerifier key={surface} surface={surface} guide={guide} />
+    </section>
+  );
+}
+
 function DesktopSimulator() {
   const [stage, setStage] = useState(0);
   const [model, setModel] = useState("");
@@ -493,7 +630,7 @@ function CourseView({ lesson, lessonIndex, completed, diagnostic, onDiagnose, on
         <div className="prerequisite-line"><strong>先修</strong>{lesson.prerequisites.map((item) => <span key={item}>{item}</span>)}</div>
       </section>
 
-      {lesson.id === "installation-channels" ? <><InstallGuide /><InteractionPractice /></> : null}
+      {lesson.id === "installation-channels" ? <><InstallGuide /><RealInterfaceGuide /><InteractionPractice /></> : null}
       <PreQuiz lesson={lesson} result={diagnostic} onResult={(passed) => onDiagnose(lesson.id, passed)} />
       <TracePanel lesson={lesson} />
 

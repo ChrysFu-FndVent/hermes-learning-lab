@@ -23,6 +23,14 @@ Hermes 是可长期运行的 Agent harness：Provider/Model 可替换；工具�
 
 当前官方学习路径为 Beginner（Installation、Quickstart、CLI、Configuration）、Intermediate（Sessions、Messaging、Tools、Skills、Memory、Cron）和 Advanced（Architecture、扩展、贡献与 RL）。本课程在此基础上补入 Prompt 契约、结构化输出、恢复路径和生产评测。
 
+## Desktop 与飞书界面事实
+
+官方 Desktop 是聊天优先窗口：左侧提供 New session、Skills & Tools、Messaging 与会话列表，中间为聊天和消息输入，底部状态栏显示连接、模型与上下文状态。课程使用官方仓库中的 [`session-source-folders.png`](https://github.com/NousResearch/hermes-agent/blob/main/apps/desktop/pr-assets/session-source-folders.png) 作为版本化实景参考，并明确提示界面可能随更新变化。
+
+飞书接入包含两条 UI 路径：开发者控制台负责权限、WebSocket 事件、交互式卡片和版本发布；飞书客户端负责私聊/群聊、`@Hermes`、Typing 表情与审批卡。危险命令审批通过原生卡片回传；卡片必须订阅 `card.action.trigger` 并启用交互式卡片能力，否则点击会出现错误 `200340`。
+
+为避免静态课程暗中读取真实工作环境，真实操作反馈分成两种显式证据：学习者主动粘贴 `DESKTOP_OK` / `FEISHU_OK` 回执，以及点击后才运行的本机只读状态探针。探针不读取配置、会话、密钥、日志或消息。
+
 ## 当前配置与恢复路径
 
 安装入口按设备分层：macOS/Linux/WSL2 使用官方 shell 安装器，Windows 原生使用 PowerShell 安装器；初学者可从 Hermes Desktop 安装器开始，已有 CLI 可运行 `hermes desktop`。飞书推荐通过 Gateway 的 WebSocket 长连接接入，无需公网 URL。

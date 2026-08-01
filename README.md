@@ -14,7 +14,7 @@
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
 [![Lessons](https://img.shields.io/badge/课程-13%20课-e7a83e)](#学习路线)
 [![Phases](https://img.shields.io/badge/路径-4%20阶段-70b58a)](./CURRICULUM.md)
-[![Safety](https://img.shields.io/badge/运行模式-浏览器模拟-d56c62)](#安全边界)
+[![Safety](https://img.shields.io/badge/运行模式-模拟%20%2B%20明示只读检测-d56c62)](#安全边界)
 
 [快速开始](#快速开始) · [完整课程](./CURRICULUM.md) · [实验手册](./docs/labs/README.md) · [排错指南](./docs/TROUBLESHOOTING.md) · [资料研究](./RESEARCH.md) · [设计方案](./DESIGN.md)
 
@@ -50,8 +50,10 @@ Hermes Learning Lab 是一个依据 [Hermes Agent 官方文档](https://hermes-a
 | 学习体验 | 工程与安全 |
 |---|---|
 | 13 课、4 阶段渐进路径 | React + Vite 纯前端架构 |
-| macOS、Windows、WSL2 与桌面端安装导航 | 官方命令可复制，浏览器不执行 Shell |
-| 桌面端与飞书端交互模拟 | 模拟 @提及门、工具审批与无副作用反馈 |
+| macOS、Windows、WSL2 与桌面端安装导航 | 官方命令可复制；真实操作由用户在应用中执行 |
+| 官方 Desktop 实景图与可点击界面标注 | 图片本地保存并链接可核验来源 |
+| 飞书控制台/客户端逐屏路径 | 覆盖 @提及门、Typing、原生审批卡与 200340 排错 |
+| Desktop 与飞书真实回执验收 | 用户点击后才运行最小化本机只读状态检测 |
 | 每课包含先修、诊断与实验验收 | Hermes 命令只模拟展示 |
 | 单选、多选与配置构建器 | 不读取本机配置或凭据 |
 | Agent 轨迹与即时纠错 | localStorage v2，兼容迁移 v1 |
@@ -99,6 +101,7 @@ hermes-learning-lab/
 │   ├── labs/README.md          # 真实环境实验手册
 │   ├── TROUBLESHOOTING.md      # 安装、模型、工具和自动化排错
 │   └── adr/                    # 架构决策记录
+├── public/ui-reference/        # 官方界面参考图及来源说明
 ├── CURRICULUM.md               # 课程体系与知识递进
 ├── DESIGN.md                   # 产品、交互与技术设计
 ├── RESEARCH.md                 # 资料研究与采用决策
@@ -107,9 +110,9 @@ hermes-learning-lab/
 
 ## 安全边界
 
-当前应用不会调用 Shell、读取 `~/.hermes`、写入配置、安装扩展、连接消息平台或上传进度。实验中的命令仅供学习；进入真实环境时应使用隔离 Profile、测试目录和最小权限。
+浏览器模拟默认不会调用 Shell、读取 `~/.hermes`、写入配置、安装扩展、连接消息平台或上传进度。用户点击“检测本机状态”时，本地 Vite 服务只执行 `which/where hermes`、进程存在性检查和 `hermes gateway status` 三类只读探针，并且只返回布尔状态；不会返回路径、配置、日志、密钥、会话或飞书消息。真实消息回执由学习者主动粘贴并仅在浏览器内判定。
 
-浏览器模拟的取舍见 [ADR 0001](./docs/adr/0001-browser-simulation-first.md)，真实实验前请核对 [Hermes 当前官方文档](https://hermes-agent.nousresearch.com/docs/)。
+浏览器模拟的取舍见 [ADR 0001](./docs/adr/0001-browser-simulation-first.md)，明示只读检测边界见 [ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md)。真实实验前请核对 [Hermes 当前官方文档](https://hermes-agent.nousresearch.com/docs/)。
 
 ## 资料与署名
 
@@ -134,7 +137,7 @@ hermes-learning-lab/
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
 [![Lessons](https://img.shields.io/badge/Lessons-13-e7a83e)](#learning-path)
 [![Phases](https://img.shields.io/badge/Phases-4-70b58a)](./CURRICULUM.md)
-[![Safety](https://img.shields.io/badge/Runtime-Browser%20Simulation-d56c62)](#safety-boundaries)
+[![Safety](https://img.shields.io/badge/Runtime-Simulation%20%2B%20Explicit%20Read--only%20Probe-d56c62)](#safety-boundaries)
 
 [Quick Start](#quick-start) · [Curriculum](./CURRICULUM.md) · [Lab Guide](./docs/labs/README.md) · [Troubleshooting](./docs/TROUBLESHOOTING.md) · [Research](./RESEARCH.md) · [Design](./DESIGN.md)
 
@@ -170,8 +173,10 @@ Pre-quiz -> Core concepts -> Agent trace -> Hands-on lab -> Success criteria -> 
 | Learning Experience | Engineering and Safety |
 |---|---|
 | 13 lessons across 4 progressive phases | Pure React + Vite frontend |
-| macOS, Windows, WSL2, and Desktop setup guides | Copyable official commands; no shell execution |
-| Desktop and Feishu interaction simulations | Mention gate, tool approval, and safe feedback practice |
+| macOS, Windows, WSL2, and Desktop setup guides | Copyable official commands; real actions stay user-controlled |
+| Official Desktop UI reference with clickable landmarks | Local image with a verifiable source link |
+| Feishu console and client UI routes | Mentions, typing state, native approvals, and error 200340 recovery |
+| Desktop and Feishu receipt checks | Minimal local read-only probes run only after an explicit click |
 | Prerequisites, diagnostics, and lab acceptance in every lesson | Hermes commands are simulations only |
 | Single-choice, multiple-choice, and configuration builders | No access to local configuration or credentials |
 | Agent traces and targeted feedback | localStorage v2 with v1 migration |
@@ -215,6 +220,7 @@ hermes-learning-lab/
 ├── docs/labs/README.md          # Real-environment lab guide
 ├── docs/TROUBLESHOOTING.md      # Setup, model, tools, and automation recovery
 ├── docs/adr/                    # Architecture decisions
+├── public/ui-reference/         # Attributed official UI reference assets
 ├── CURRICULUM.md                # Curriculum map and progression
 ├── DESIGN.md                    # Product and technical design
 ├── RESEARCH.md                  # Sources and adoption decisions
@@ -223,9 +229,9 @@ hermes-learning-lab/
 
 ## Safety Boundaries
 
-The app does not invoke a shell, read `~/.hermes`, change configuration, install extensions, connect to messaging platforms, or upload progress. Commands are teaching examples. Real labs should use an isolated profile, test directory, and minimum permissions.
+Browser simulations do not invoke a shell, read `~/.hermes`, change configuration, install extensions, connect to messaging platforms, or upload progress. When the learner explicitly clicks the local status check, the Vite server runs only command discovery, process-presence, and `hermes gateway status` read-only probes and returns booleans. It never returns paths, configuration, logs, secrets, sessions, or messages. Receipt text is submitted explicitly and evaluated in the browser.
 
-See [ADR 0001](./docs/adr/0001-browser-simulation-first.md) for the browser-simulation tradeoff and verify real commands against the current [Hermes documentation](https://hermes-agent.nousresearch.com/docs/).
+See [ADR 0001](./docs/adr/0001-browser-simulation-first.md) for simulation tradeoffs and [ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md) for the local verification boundary. Verify real commands against the current [Hermes documentation](https://hermes-agent.nousresearch.com/docs/).
 
 ## Sources
 

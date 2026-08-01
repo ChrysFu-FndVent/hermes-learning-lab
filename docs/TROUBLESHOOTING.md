@@ -42,6 +42,13 @@ macOS/Linux/WSL2 使用 `curl -fsSL https://hermes-agent.nousresearch.com/instal
 3. 检查 Desktop 选择的 Profile/Model 是否与 CLI 一致。
 4. 新建会话后先完成无工具聊天，再测试 File 或 Terminal 审批。
 
+### 课程无法检测 Desktop
+
+- 确认当前页面由本地 `npm run dev` 或 `npm run preview` 提供；纯静态托管没有本机探针。
+- 检测只识别当前系统中的 Hermes 应用进程，进程名随版本变化时可能出现假阴性。
+- 本机检测失败不代表 Desktop 不可用；以 Desktop 中 `DESKTOP_OK` 回执和底部连接状态为最终证据。
+- 检测不会读取 `~/.hermes`、Desktop 日志、会话、密钥或窗口内容。
+
 ## 飞书机器人不回复
 
 1. 运行 `hermes gateway status`，必要时重新运行 `hermes gateway setup` 并选择 Feishu/Lark。
@@ -50,6 +57,20 @@ macOS/Linux/WSL2 使用 `curl -fsSL https://hermes-agent.nousresearch.com/instal
 4. 群聊测试必须 `@Hermes`；私聊再单独验证。
 5. 生产环境设置 `FEISHU_ALLOWED_USERS`，并检查用户或群组是否在允许范围。
 6. 不要在日志、截图或聊天中暴露 App Secret。
+
+### 审批卡点击报 200340
+
+1. 在 **事件订阅** 中添加 `card.action.trigger`。
+2. 在 **应用功能 → 机器人** 中启用交互式卡片。
+3. Webhook 模式还需把消息卡片请求网址设置为事件 Webhook；WebSocket 模式由 SDK 处理。
+4. 创建并发布新的应用版本，等待权限审批生效后再测试。
+
+### 课程回执验收失败
+
+- Desktop 必须只回复 `DESKTOP_OK`，飞书必须只回复 `FEISHU_OK`；不要把 Prompt 一并粘贴。
+- 飞书群聊确认 `@Hermes` 已被客户端识别为提及实体，而不是普通文本。
+- 若 Agent 调用了工具，重新发送带有“不要调用任何工具”的校验 Prompt，先验证基础消息链路。
+- 回执在浏览器内判定，不会上传；不要粘贴凭据或私人聊天内容。
 
 ## 配置混乱
 
