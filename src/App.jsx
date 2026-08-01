@@ -105,7 +105,7 @@ function CourseSidebar({ activeIndex, completed, onSelect, open, onClose }) {
                       aria-current={isActive ? "step" : undefined}
                     >
                       <span className="lesson-index">{isComplete ? <Check size={13} /> : lesson.number}</span>
-                      <span><strong>{lesson.title}</strong><small>{lesson.duration}</small></span>
+                      <span><strong>{lesson.title}</strong></span>
                       <ChevronRight size={15} />
                     </button>
                   );
@@ -486,7 +486,7 @@ function CourseView({ lesson, lessonIndex, completed, diagnostic, onDiagnose, on
   return (
     <div className="course-view">
       <section className="lesson-intro">
-        <div className="lesson-kicker"><span>第 {lesson.number} 课</span><span>{lesson.level}</span><span>{lesson.duration}</span></div>
+        <div className="lesson-kicker"><span>第 {lesson.number} 课</span><span>{lesson.level}</span></div>
         <h1>{lesson.shortTitle}</h1>
         <p>{lesson.summary}</p>
         <div className="objective-line"><ShieldCheck size={17} /><span>{lesson.objective}</span></div>
