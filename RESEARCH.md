@@ -1,43 +1,83 @@
-# Hermes Agent GitHub 研究摘要
+# Hermes 课程资料研究
 
-检索日期：2026-07-29。事实主线来自 `NousResearch/hermes-agent` 的当前 `main` 分支、仓库内网站文档与 TUI README；社区项目只用于补充界面、生态和实践视角。
+核验日期：2026-08-02。事实优先级为 Hermes 官方文档与仓库、NousResearch 模型卡、官方工具链；AI-For-Beginners 只用于教学结构；社区资料只提供界面与实践视角。
 
-## 核心结论
+## AI-For-Beginners 教学启发
 
-Hermes 的核心不是一个新的聊天 UI，而是一套长期运行的 Agent harness：模型可替换，工具运行时负责执行，Session 保存事实记录，Memory 保存压缩经验，Skills 保存渐进披露的操作知识，MCP/Plugins 扩展外部能力，Gateway 把同一个 Agent 暴露到多个消息平台，Cron 与 Delegation 让它能够离线和并行工作。
+[microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) 使用独立环境准备、课前测验、理论阅读、可执行 Notebook、代码挑战、实验任务、课后测验和自学资料形成渐进课程。典型实验明确 Task、Dataset/Input、Execution 和 Expected Result。
 
-其设计理念可以归纳为五点：
+本项目采用以下映射：
 
-1. **闭环学习**：复杂任务可沉淀成 Skills，长期事实进入 Memory，过去会话可搜索。
-2. **界面与核心解耦**：CLI、React/Ink TUI、Desktop、Web 和消息平台共享会话与运行时。
-3. **Provider 无锁定**：通过统一配置切换 Nous Portal、OpenRouter、OpenAI、Anthropic 或兼容端点。
-4. **能力按需披露**：Toolsets、Skills、MCP 白名单减少提示长度、选择成本与攻击面。
-5. **副作用显式治理**：写入审批、Checkpoint、网络隔离、Skill 安全扫描和可恢复执行。
+| AI-For-Beginners | Hermes Learning Lab |
+|---|---|
+| Course setup | Lesson 00 Setup + Doctor |
+| Pre-lecture quiz | 每课课前诊断 |
+| Theory / readings | 四步核心讲解 + 官方资料 |
+| Notebook / code challenge | Agent 轨迹 + 浏览器模拟题 |
+| Assignment | 真实实验任务、输入、步骤、成功标准 |
+| Post-lecture quiz | 课后检查与掌握度 |
 
-## 已核验项目
+## Hermes Agent 核心结论
 
-| 项目 | 类型 | 学习价值 |
-|---|---|---|
-| [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | 官方核心 | 运行时、TUI、Memory、Skills、MCP、Gateway、Cron、Delegation 的事实源 |
-| [fathah/hermes-desktop](https://github.com/fathah/hermes-desktop) | 社区桌面端 | 展示如何把安装、Profiles、Memory、Skills、Schedules 与 Gateway 组织成 GUI |
-| [nesquena/hermes-webui](https://github.com/nesquena/hermes-webui) | 社区 Web UI | 三栏会话/聊天/工作区和轻量远程访问范式 |
-| [outsourc-e/hermes-workspace](https://github.com/outsourc-e/hermes-workspace) | 社区工作区 | 将 Chat、Terminal、Memory、Skills 与 Inspector 组合成操作空间 |
-| [NousResearch/hermes-agent-self-evolution](https://github.com/NousResearch/hermes-agent-self-evolution) | 官方实验 | 用 DSPy + GEPA 将 Skill 改进变成评测驱动优化 |
-| [0xNyk/awesome-hermes-agent](https://github.com/0xNyk/awesome-hermes-agent) | 社区索引 | 观察 Skills、Plugins、Memory providers 与 surfaces 生态 |
-| [alchaincyf/hermes-agent-orange-book](https://github.com/alchaincyf/hermes-agent-orange-book) | 中文指南 | 从自改进、记忆、多 Agent 与安全角度建立整体心智模型 |
-| [Yonkoo11/hermes-dojo](https://github.com/Yonkoo11/hermes-dojo) | 示例 Skill | 展示 measure → weakness → evolve → measure → report 的具体闭环 |
+Hermes 是可长期运行的 Agent harness：Provider/Model 可替换；工具运行时负责执行；Session 保存事实；Memory 保存压缩经验；Context Files 保存项目规则；Skills 提供渐进披露知识；Plugins/MCP 扩展能力；Gateway、Cron、Hooks 与 Batch 负责入口和触发；Delegation 与 Provider Routing 分配工作；Sandbox、Egress、审批和 Checkpoint 管理副作用。
 
-## 官方文档入口
+当前官方学习路径为 Beginner（Installation、Quickstart、CLI、Configuration）、Intermediate（Sessions、Messaging、Tools、Skills、Memory、Cron）和 Advanced（Architecture、扩展、贡献与 RL）。本课程在此基础上补入 Prompt 契约、结构化输出、恢复路径和生产评测。
+
+## 当前配置与恢复路径
+
+最小启动：
+
+```bash
+hermes setup
+hermes setup --portal
+hermes model
+hermes doctor
+```
+
+先完成一次普通聊天，再添加 Gateway、Cron、Skills、MCP 或路由。推荐恢复顺序：
+
+```text
+hermes doctor -> hermes model -> hermes setup -> hermes sessions list -> hermes --continue -> hermes gateway status
+```
+
+`~/.hermes/config.yaml` 保存普通设置，`~/.hermes/.env` 保存秘密。配置命令包括 `hermes config get/set/unset/check/migrate`。
+
+## Hermes 4.3 模型要点
+
+[Hermes-4.3-36B](https://huggingface.co/NousResearch/Hermes-4.3-36B) 是 36B 混合推理模型，支持 reasoning/non-reasoning、函数调用、JSON Schema、长上下文和角色扮演。使用 `tokenizer.apply_chat_template(...)`，reasoning 模式使用 `thinking=True`。vLLM 的 Hermes 工具解析器为 `hermes`；SGLang 需按当前模型卡配置解析器。
+
+模型卡建议采样起点：
+
+```python
+temperature = 0.6
+top_p = 0.95
+top_k = 20
+```
+
+这些参数不是所有任务的最优值，课程要求用目标任务评测选择。Serving 覆盖 Transformers、vLLM、SGLang、GGUF、llama.cpp、Ollama 和 LM Studio。
+
+## Prompt 与微调决策
+
+推荐升级阶梯：
+
+```text
+Prompt contract -> Skill -> SFT / LoRA -> RL with Atropos
+```
+
+只有错误模式稳定、数据足够、指标明确且低成本层无法解决时才进入微调。NousResearch 的 [Atropos](https://github.com/NousResearch/atropos) 提供 RL 环境方向；[hermes-agent-self-evolution](https://github.com/NousResearch/hermes-agent-self-evolution) 展示评测驱动的 Skill/Prompt 优化闭环。
+
+## 采用的官方入口
 
 - [Quickstart](https://hermes-agent.nousresearch.com/docs/getting-started/quickstart)
 - [Learning Path](https://hermes-agent.nousresearch.com/docs/getting-started/learning-path)
+- [Configuration](https://hermes-agent.nousresearch.com/docs/user-guide/configuration)
+- [Tools](https://hermes-agent.nousresearch.com/docs/user-guide/features/tools)
 - [Skills](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills)
 - [Memory](https://hermes-agent.nousresearch.com/docs/user-guide/features/memory)
-- [MCP](https://hermes-agent.nousresearch.com/docs/user-guide/features/mcp)
 - [Cron](https://hermes-agent.nousresearch.com/docs/user-guide/features/cron)
-- [Delegation](https://hermes-agent.nousresearch.com/docs/user-guide/features/delegation)
-- [Developer architecture](https://hermes-agent.nousresearch.com/docs/developer-guide/architecture)
+- [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security)
+- [Checkpoints](https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback)
 
 ## 版本注意
 
-Hermes 迭代速度很快。社区教程可能基于旧版本，功能数量和命令也会变化。学习平台因此优先教授稳定概念与边界，并把具体命令链接回当前官方文档。
+Hermes 迭代较快，社区教程和命令可能滞后。课程把稳定心智模型放在正文，把具体命令链接到当前官方资料；发布前需要运行链接检查，并定期复核配置键、工具解析器和模型参数。

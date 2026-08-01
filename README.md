@@ -8,15 +8,15 @@
 
 # Hermes Learning Lab
 
-**从 Agent Loop 到安全委派，一套可以边学边练的 Hermes Agent 中文课程。**
+**一套从首次启动到安全生产化的 Hermes Agent 中文交互课程。**
 
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0b0b0a)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
-[![Playwright](https://img.shields.io/badge/QA-Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
-[![Language](https://img.shields.io/badge/课程语言-简体中文-e7a83e)](#学习路线)
-[![Safety](https://img.shields.io/badge/运行模式-浏览器模拟-70b58a)](#安全边界)
+[![Lessons](https://img.shields.io/badge/课程-12%20课-e7a83e)](#学习路线)
+[![Phases](https://img.shields.io/badge/路径-4%20阶段-70b58a)](./CURRICULUM.md)
+[![Safety](https://img.shields.io/badge/运行模式-浏览器模拟-d56c62)](#安全边界)
 
-[快速开始](#快速开始) · [学习路线](#学习路线) · [项目研究](./RESEARCH.md) · [设计方案](./DESIGN.md) · [Figma](https://www.figma.com/design/0l0vZa7noe6dyyiOZbakgD?node-id=8-2)
+[快速开始](#快速开始) · [完整课程](./CURRICULUM.md) · [实验手册](./docs/labs/README.md) · [排错指南](./docs/TROUBLESHOOTING.md) · [资料研究](./RESEARCH.md) · [设计方案](./DESIGN.md)
 
 </div>
 
@@ -28,56 +28,48 @@
 - [功能亮点](#功能亮点)
 - [学习路线](#学习路线)
 - [快速开始](#快速开始)
-- [技术架构](#技术架构)
 - [项目结构](#项目结构)
 - [安全边界](#安全边界)
-- [研究与设计资料](#研究与设计资料)
+- [资料与署名](#资料与署名)
 
 ## 这是什么
 
-Hermes Learning Lab 是一个基于 [Hermes Agent 官方仓库](https://github.com/NousResearch/hermes-agent)、官方文档和已核验社区项目制作的交互式中文入门平台。
+Hermes Learning Lab 是一个依据 [Hermes Agent 官方文档](https://hermes-agent.nousresearch.com/docs/)、[Nous Hermes 模型资料](https://huggingface.co/NousResearch/Hermes-4.3-36B)和 [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) 教学结构制作的中文学习平台。
 
-它不从长篇概念介绍开始，而是把每个主题组织成一个短学习闭环：
+每课都形成一个可验证闭环：
 
 ```text
-理解概念 -> 观察 Agent 轨迹 -> 在模拟环境中决策 -> 获得即时反馈 -> 记录掌握度
+课前诊断 -> 核心讲解 -> Agent 轨迹 -> 可执行实验 -> 成功标准 -> 课后检查 -> 延伸资料
 ```
 
 > [!NOTE]
-> 这是独立的社区教学项目，并非 Nous Research 或 Hermes Agent 的官方产品。
+> 本项目是独立社区教学项目，不是 Nous Research 或 Microsoft 的官方产品。
 
 ## 功能亮点
 
 | 学习体验 | 工程与安全 |
 |---|---|
-| 8 节渐进式引导课程 | React + Vite 纯前端架构 |
-| 单选、多选和配置构建器 | 所有 Hermes 命令仅模拟展示 |
-| Agent 回合轨迹可视化 | 不读取本机配置或凭据 |
-| 即时反馈与针对性提示 | 版本化 `localStorage` 进度 |
-| 检查点、掌握度与进度重置 | 桌面、平板、手机响应式布局 |
-| 官方/社区项目研究视图 | 键盘焦点与语义化控件支持 |
+| 12 课、4 阶段渐进路径 | React + Vite 纯前端架构 |
+| 每课包含先修、诊断与实验验收 | Hermes 命令只模拟展示 |
+| 单选、多选与配置构建器 | 不读取本机配置或凭据 |
+| Agent 轨迹与即时纠错 | localStorage v2，兼容迁移 v1 |
+| 阶段进度和掌握度反馈 | 桌面、平板、手机响应式布局 |
+| 官方技术资料与模型卡入口 | 无账号、数据库或远程埋点 |
 
 ## 学习路线
 
-| 课程 | 主题 | 实践任务 |
-|---:|---|---|
-| 01 | 认识 Hermes | 为首次写入任务选择审批范围 |
-| 02 | 模型与身份 | 配置 Provider 与独立 Profile |
-| 03 | 工具与审批 | 组合完成任务所需的最小工具链 |
-| 04 | 会话与记忆 | 判断信息应进入 Session 还是 Memory |
-| 05 | Skills 与 MCP | 组装可执行的 Skill 结构 |
-| 06 | 消息与自动化 | 构建 Gateway + Cron 工作日早报 |
-| 07 | 委派与并行 | 识别适合并行分派的独立任务 |
-| 08 | 安全毕业挑战 | 组合范围、审批、回滚与验证证据 |
+| 阶段 | 课程 | 能力目标 |
+|---|---|---|
+| I 启动与基础 | 00 环境与诊断 · 01 Agent Loop · 02 模型与 Profile | 建立可工作的聊天基线，理解运行循环和配置分层 |
+| II 可靠交互 | 03 Prompt 契约 · 04 工具/Context/审批 · 05 Session/Memory/SOUL | 让任务可验收、工具可审计、上下文不过度记忆 |
+| III 扩展与自动化 | 06 Skills/Plugins/MCP · 07 Gateway/Cron/Hooks/Batch · 08 委派与路由 | 安装能力、构建自动化、拆分并路由独立任务 |
+| IV 工程化与进阶 | 09 Sandbox/Egress/ACP · 10 推理/量化/微调 · 11 毕业项目 | 隔离执行、评测模型、交付可恢复生产工作流 |
+
+完整先修关系、实验与成功标准见 [CURRICULUM.md](./CURRICULUM.md)。
 
 ## 快速开始
 
-### 环境要求
-
-- Node.js 18+
-- npm 9+
-
-### 本地开发
+环境要求：Node.js 18+、npm 9+。
 
 ```bash
 git clone https://github.com/ChrysFu-FndVent/hermes-learning-lab.git
@@ -86,72 +78,47 @@ npm install
 npm run dev
 ```
 
-Vite 启动后会输出本地访问地址，通常为 `http://localhost:5173/`。
-
-### 质量检查
+Vite 默认提供 `http://localhost:5173/`。质量检查：
 
 ```bash
 npm run lint
 npm run build
 ```
 
-## 技术架构
-
-```mermaid
-flowchart LR
-    A[GitHub 与官方文档] --> B[结构化课程数据]
-    B --> C[React 学习引擎]
-    C --> D[练习判定与即时反馈]
-    D --> E[localStorage 进度]
-    C --> F[研究与架构视图]
-```
-
-| 层级 | 职责 |
-|---|---|
-| Content | 课程、题目、文档链接与开源项目研究 |
-| Learning Engine | 练习判定、反馈、课程完成状态与掌握度 |
-| Persistence | 使用版本化 schema 保存本地学习进度 |
-| UI Shell | 三栏工作台、响应式导航与无障碍交互 |
-
 ## 项目结构
 
 ```text
 hermes-learning-lab/
 ├── src/
-│   ├── App.jsx          # 课程、研究与架构视图
-│   ├── data.js          # 课程和项目研究数据
-│   └── styles.css       # 视觉系统与响应式布局
-├── public/              # 静态视觉资源
-├── docs/adr/            # 架构决策记录
-├── DESIGN.md            # 产品、交互与技术设计
-├── RESEARCH.md          # Hermes 开源生态研究摘要
-└── preview.png          # 桌面端成品预览
+│   ├── App.jsx                 # 学习引擎、视图与进度迁移
+│   ├── data.js                 # 12 课、来源和架构数据
+│   └── styles.css              # 三栏工作台与响应式设计
+├── docs/
+│   ├── labs/README.md          # 真实环境实验手册
+│   ├── TROUBLESHOOTING.md      # 安装、模型、工具和自动化排错
+│   └── adr/                    # 架构决策记录
+├── CURRICULUM.md               # 课程体系与知识递进
+├── DESIGN.md                   # 产品、交互与技术设计
+├── RESEARCH.md                 # 资料研究与采用决策
+└── preview.png                 # 当前界面预览
 ```
 
 ## 安全边界
 
-应用中的命令只用于教学展示。当前版本不会：
+当前应用不会调用 Shell、读取 `~/.hermes`、写入配置、安装扩展、连接消息平台或上传进度。实验中的命令仅供学习；进入真实环境时应使用隔离 Profile、测试目录和最小权限。
 
-- 调用本机 Hermes CLI 或 Shell
-- 读取 `~/.hermes`、环境变量或模型凭据
-- 写入 Hermes 配置、安装 Skills/MCP
-- 连接 Telegram、Discord、Slack 等消息平台
-- 向远程服务上传学习进度
+浏览器模拟的取舍见 [ADR 0001](./docs/adr/0001-browser-simulation-first.md)，真实实验前请核对 [Hermes 当前官方文档](https://hermes-agent.nousresearch.com/docs/)。
 
-浏览器模拟方案的完整取舍见 [ADR 0001](./docs/adr/0001-browser-simulation-first.md)。进入真实环境前，请以当前版本的 [Hermes 官方文档](https://hermes-agent.nousresearch.com/docs/) 为准。
+## 资料与署名
 
-## 研究与设计资料
-
-- [Hermes Agent GitHub 研究摘要](./RESEARCH.md)
-- [产品设计、功能模块与用户流程](./DESIGN.md)
-- [Figma 概念稿与网页捕获](https://www.figma.com/design/0l0vZa7noe6dyyiOZbakgD?node-id=8-2)
-- [Hermes Agent 官方文档](https://hermes-agent.nousresearch.com/docs/)
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent)：运行时与命令事实源
+- [Hermes 4.3 model card](https://huggingface.co/NousResearch/Hermes-4.3-36B)：模型、Prompt、Serving 与采样事实源
+- [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners)：课程结构与实验教学参考
+- [RESEARCH.md](./RESEARCH.md)：来源、结论与版本注意事项
 
 ---
 
-<div align="center">
-  <sub>Learn the boundaries. Practise the loop. Ship with evidence.</sub>
-</div>
+<div align="center"><sub>Learn the boundary. Run the lab. Ship with evidence.</sub></div>
 
 <a id="english"></a>
 
@@ -159,15 +126,15 @@ hermes-learning-lab/
 
 # Hermes Learning Lab
 
-**A hands-on Chinese course for learning Hermes Agents, from the Agent Loop to safe delegation.**
+**An interactive Chinese curriculum for learning Hermes Agent, from first setup to safe production workflows.**
 
 [![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0b0b0a)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
-[![Playwright](https://img.shields.io/badge/QA-Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
-[![Language](https://img.shields.io/badge/Course%20Language-Simplified%20Chinese-e7a83e)](#learning-path)
-[![Safety](https://img.shields.io/badge/Runtime-Browser%20Simulation-70b58a)](#safety-boundaries)
+[![Lessons](https://img.shields.io/badge/Lessons-12-e7a83e)](#learning-path)
+[![Phases](https://img.shields.io/badge/Phases-4-70b58a)](./CURRICULUM.md)
+[![Safety](https://img.shields.io/badge/Runtime-Browser%20Simulation-d56c62)](#safety-boundaries)
 
-[Quick Start](#quick-start) · [Learning Path](#learning-path) · [Research](./RESEARCH.md) · [Design](./DESIGN.md) · [Figma](https://www.figma.com/design/0l0vZa7noe6dyyiOZbakgD?node-id=8-2)
+[Quick Start](#quick-start) · [Curriculum](./CURRICULUM.md) · [Lab Guide](./docs/labs/README.md) · [Troubleshooting](./docs/TROUBLESHOOTING.md) · [Research](./RESEARCH.md) · [Design](./DESIGN.md)
 
 </div>
 
@@ -179,56 +146,48 @@ hermes-learning-lab/
 - [Highlights](#highlights)
 - [Learning Path](#learning-path)
 - [Quick Start](#quick-start)
-- [Architecture](#architecture)
 - [Project Structure](#project-structure)
 - [Safety Boundaries](#safety-boundaries)
-- [Research and Design Resources](#research-and-design-resources)
+- [Sources](#sources)
 
 ## What It Is
 
-Hermes Learning Lab is an interactive Chinese-language beginner platform built from the [official Hermes Agent repository](https://github.com/NousResearch/hermes-agent), official documentation, and verified community projects.
+Hermes Learning Lab is a Chinese-language learning platform based on the [official Hermes Agent documentation](https://hermes-agent.nousresearch.com/docs/), the [Nous Hermes model card](https://huggingface.co/NousResearch/Hermes-4.3-36B), and the curriculum structure of [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners).
 
-Instead of starting with long conceptual explanations, it organizes each topic into a short learning loop:
+Every lesson uses the same verifiable loop:
 
 ```text
-Understand the concept -> Observe the Agent trace -> Decide in a simulated environment -> Get immediate feedback -> Record mastery
+Pre-quiz -> Core concepts -> Agent trace -> Hands-on lab -> Success criteria -> Post-check -> References
 ```
 
 > [!NOTE]
-> This is an independent community education project, not an official product of Nous Research or Hermes Agent.
+> This is an independent community education project, not an official product of Nous Research or Microsoft.
 
 ## Highlights
 
 | Learning Experience | Engineering and Safety |
 |---|---|
-| 8 progressively guided lessons | Pure frontend architecture with React + Vite |
-| Single-choice, multiple-choice, and configuration-builder exercises | All Hermes commands are simulations only |
-| Visualized Agent turn traces | Does not read local configuration or credentials |
-| Immediate feedback and targeted guidance | Versioned `localStorage` progress |
-| Checkpoints, mastery, and progress reset | Responsive desktop, tablet, and mobile layouts |
-| Official and community project research views | Keyboard focus and semantic control support |
+| 12 lessons across 4 progressive phases | Pure React + Vite frontend |
+| Prerequisites, diagnostics, and lab acceptance in every lesson | Hermes commands are simulations only |
+| Single-choice, multiple-choice, and configuration builders | No access to local configuration or credentials |
+| Agent traces and targeted feedback | localStorage v2 with v1 migration |
+| Phase progress and mastery tracking | Responsive desktop, tablet, and mobile layouts |
+| Direct links to official technical sources | No accounts, database, or remote analytics |
 
 ## Learning Path
 
-| Lesson | Topic | Practical Task |
-|---:|---|---|
-| 01 | Meet Hermes | Choose an approval scope for the first write task |
-| 02 | Models and Identity | Configure a provider and an independent profile |
-| 03 | Tools and Approval | Assemble the minimum toolchain required for a task |
-| 04 | Sessions and Memory | Decide whether information belongs in Session or Memory |
-| 05 | Skills and MCP | Assemble an executable Skill structure |
-| 06 | Messaging and Automation | Build a Gateway + Cron weekday briefing |
-| 07 | Delegation and Parallelism | Identify independent tasks suitable for parallel dispatch |
-| 08 | Safety Graduation Challenge | Combine scope, approval, rollback, and verification evidence |
+| Phase | Lessons | Outcome |
+|---|---|---|
+| I Setup and Foundations | 00 Environment and Doctor · 01 Agent Loop · 02 Models and Profiles | Establish a working chat baseline and understand runtime/configuration layers |
+| II Reliable Interaction | 03 Prompt Contracts · 04 Tools/Context/Approval · 05 Sessions/Memory/SOUL | Make tasks testable, tools auditable, and context appropriately scoped |
+| III Extensions and Automation | 06 Skills/Plugins/MCP · 07 Gateway/Cron/Hooks/Batch · 08 Delegation and Routing | Install capabilities, automate safely, and route independent work |
+| IV Production Engineering | 09 Sandbox/Egress/ACP · 10 Inference/Quantization/Tuning · 11 Capstone | Isolate execution, evaluate models, and deliver recoverable workflows |
+
+See [CURRICULUM.md](./CURRICULUM.md) for prerequisites, lab deliverables, and mastery criteria.
 
 ## Quick Start
 
-### Requirements
-
-- Node.js 18+
-- npm 9+
-
-### Local Development
+Requirements: Node.js 18+ and npm 9+.
 
 ```bash
 git clone https://github.com/ChrysFu-FndVent/hermes-learning-lab.git
@@ -237,73 +196,42 @@ npm install
 npm run dev
 ```
 
-Vite prints the local URL after startup, usually `http://localhost:5173/`.
-
-### Quality Checks
+Vite normally serves the app at `http://localhost:5173/`. Quality checks:
 
 ```bash
 npm run lint
 npm run build
 ```
 
-## Architecture
-
-```mermaid
-flowchart LR
-    A[GitHub and official documentation] --> B[Structured course data]
-    B --> C[React learning engine]
-    C --> D[Exercise evaluation and immediate feedback]
-    D --> E[localStorage progress]
-    C --> F[Research and architecture views]
-```
-
-| Layer | Responsibility |
-|---|---|
-| Content | Lessons, questions, documentation links, and open-source project research |
-| Learning Engine | Exercise evaluation, feedback, lesson completion, and mastery |
-| Persistence | Saves local learning progress with a versioned schema |
-| UI Shell | Three-column workspace, responsive navigation, and accessible interactions |
-
 ## Project Structure
 
 ```text
 hermes-learning-lab/
-├── src/
-│   ├── App.jsx          # Course, research, and architecture views
-│   ├── data.js          # Course and project research data
-│   └── styles.css       # Visual system and responsive layout
-├── public/              # Static visual assets
-├── docs/adr/            # Architecture decision records
-├── DESIGN.md            # Product, interaction, and technical design
-├── RESEARCH.md          # Hermes open-source ecosystem research summary
-└── preview.png          # Finished desktop preview
+├── src/                         # React learning engine, curriculum data, styles
+├── docs/labs/README.md          # Real-environment lab guide
+├── docs/TROUBLESHOOTING.md      # Setup, model, tools, and automation recovery
+├── docs/adr/                    # Architecture decisions
+├── CURRICULUM.md                # Curriculum map and progression
+├── DESIGN.md                    # Product and technical design
+├── RESEARCH.md                  # Sources and adoption decisions
+└── preview.png                  # Current desktop preview
 ```
 
 ## Safety Boundaries
 
-Commands in the application are shown for teaching purposes only. The current version does not:
+The app does not invoke a shell, read `~/.hermes`, change configuration, install extensions, connect to messaging platforms, or upload progress. Commands are teaching examples. Real labs should use an isolated profile, test directory, and minimum permissions.
 
-- Invoke the local Hermes CLI or shell
-- Read `~/.hermes`, environment variables, or model credentials
-- Write Hermes configuration or install Skills/MCP
-- Connect to messaging platforms such as Telegram, Discord, or Slack
-- Upload learning progress to remote services
+See [ADR 0001](./docs/adr/0001-browser-simulation-first.md) for the browser-simulation tradeoff and verify real commands against the current [Hermes documentation](https://hermes-agent.nousresearch.com/docs/).
 
-See [ADR 0001](./docs/adr/0001-browser-simulation-first.md) for the full tradeoff behind the browser-simulation approach. Before entering a real environment, refer to the current [official Hermes documentation](https://hermes-agent.nousresearch.com/docs/).
+## Sources
 
-## Research and Design Resources
-
-- [Hermes Agent GitHub research summary](./RESEARCH.md)
-- [Product design, feature modules, and user flows](./DESIGN.md)
-- [Figma concept and web capture](https://www.figma.com/design/0l0vZa7noe6dyyiOZbakgD?node-id=8-2)
-- [Official Hermes Agent documentation](https://hermes-agent.nousresearch.com/docs/)
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent): runtime and command source of truth
+- [Hermes 4.3 model card](https://huggingface.co/NousResearch/Hermes-4.3-36B): model, prompt, serving, and sampling details
+- [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners): curriculum and lab structure reference
+- [RESEARCH.md](./RESEARCH.md): research conclusions and version notes
 
 ---
 
-<div align="center">
-  <sub>Learn the boundaries. Practise the loop. Ship with evidence.</sub>
-</div>
+<div align="center"><sub>Learn the boundary. Run the lab. Ship with evidence.</sub></div>
 
-<p align="right"><a href="#english">Back to English</a></p>
-
----
+<p align="right"><a href="#简体中文">返回简体中文</a></p>
