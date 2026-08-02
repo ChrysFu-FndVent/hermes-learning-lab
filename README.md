@@ -1,3 +1,14 @@
+<!-- README-ARCHITECT: visual-shell -->
+<p align="center">
+  <img src="assets/readme/hermes-learning-lab-banner.svg" alt="hermes-learning-lab project banner" width="100%" />
+</p>
+<p align="center">
+  <a href="https://github.com/ChrysFu-FndVent/hermes-learning-lab/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ChrysFu-FndVent/hermes-learning-lab?style=for-the-badge&amp;logo=github" /></a>
+  <a href="https://github.com/ChrysFu-FndVent/hermes-learning-lab/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/ChrysFu-FndVent/hermes-learning-lab?style=for-the-badge" /></a>
+  <a href="https://github.com/ChrysFu-FndVent/hermes-learning-lab/search?l=CSS"><img alt="Top language" src="https://img.shields.io/github/languages/top/ChrysFu-FndVent/hermes-learning-lab?style=for-the-badge" /></a>
+</p>
+<!-- README-ARCHITECT: visual-shell end -->
+
 <div align="right">
   <a href="#简体中文">简体中文</a> | <a href="#english">English</a>
 </div>
