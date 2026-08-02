@@ -672,6 +672,25 @@ select:focus-visible {
 .lab-anatomy ul { padding: 0; list-style: none; }
 .lab-anatomy ul li { display: flex; align-items: flex-start; gap: 6px; }
 .lab-anatomy ul svg { flex: 0 0 auto; margin-top: 1px; color: var(--green); }
+.lab-verification { margin-top: 18px; padding: 18px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); }
+.lab-verification-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; }
+.lab-verification-heading h3 { margin: 5px 0 0; font-size: 15px; }
+.lab-verification-heading > span { color: var(--green); font: 10px ui-monospace, SFMono-Regular, Menlo, monospace; }
+.verification-checklist { margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
+.verification-checklist button { min-height: 48px; padding: 9px 11px; display: grid; grid-template-columns: 20px 1fr; gap: 8px; align-items: center; text-align: left; color: var(--muted); border: 1px solid var(--border); border-radius: 5px; background: var(--surface); font-size: 10px; line-height: 1.45; cursor: pointer; }
+.verification-checklist button:hover:not(:disabled) { color: var(--text); border-color: var(--border-strong); }
+.verification-checklist button.is-checked { color: var(--text); border-color: #355d45; background: var(--green-soft); }
+.verification-checklist button:disabled { cursor: default; }
+.verification-checklist button > span { width: 18px; height: 18px; display: grid; place-items: center; color: var(--canvas); border: 1px solid var(--border-strong); border-radius: 4px; }
+.verification-checklist button.is-checked > span { border-color: var(--green); background: var(--green); }
+.evidence-grid { margin-top: 14px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.evidence-grid > div { padding: 14px 14px 14px 0; }
+.evidence-grid > div + div { padding-left: 14px; border-left: 1px solid var(--border); }
+.evidence-grid strong { color: var(--amber); font-size: 10px; }
+.evidence-grid p { margin: 7px 0 0; color: var(--muted); font-size: 10px; line-height: 1.55; }
+.lab-verify-actions { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.lab-verify-actions p { margin: 0; display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.lab-verify-actions p svg { flex: 0 0 auto; color: var(--green); }
 .lab-safety { margin: 12px 0 0; display: flex; align-items: center; gap: 7px; color: var(--green); font-size: 10px; }
 
 .practice-panel {
@@ -806,6 +825,20 @@ select:focus-visible {
 .filter-tabs { display: flex; gap: 4px; }
 .filter-tabs button { height: 31px; padding: 0 13px; color: var(--muted); font-size: 11px; border: 1px solid transparent; }
 .filter-tabs button:hover, .filter-tabs button.is-active { color: var(--text); background: var(--surface-2); border-color: var(--border); }
+.material-library { padding: 10px 0 34px; }
+.material-library-heading { max-width: 720px; }
+.material-library-heading h2, .research-section-title h2 { margin: 7px 0 0; font-size: 19px; }
+.material-library-heading p { margin: 9px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.material-list { margin-top: 18px; border-top: 1px solid var(--border); }
+.material-list article { min-height: 96px; padding: 15px 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 20px; align-items: center; border-bottom: 1px solid var(--border); }
+.material-list article > div:first-child { min-width: 0; }
+.material-list article > div:first-child > span { color: var(--amber); font-size: 9px; font-weight: 700; text-transform: uppercase; }
+.material-list h3 { margin: 5px 0 0; font-size: 13px; }
+.material-list p { margin: 6px 0 0; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.material-list article > div:last-child { display: flex; align-items: center; gap: 10px; }
+.access-state { max-width: 150px; color: var(--muted); font-size: 9px; line-height: 1.35; text-align: right; }
+.access-state.is-open { color: var(--green); }
+.research-section-title { margin: 4px 0 18px; padding-top: 26px; border-top: 1px solid var(--border); }
 .repo-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .repo-card { min-width: 0; min-height: 286px; padding: 20px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
 .repo-heading { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
@@ -951,6 +984,13 @@ select:focus-visible {
   .lab-anatomy { grid-template-columns: 1fr; }
   .lab-anatomy > div, .lab-anatomy > div:first-child, .lab-anatomy > div:last-child { padding: 14px 0; border-right: 0; border-bottom: 1px solid var(--border); }
   .lab-anatomy > div:last-child { border-bottom: 0; }
+  .verification-checklist, .evidence-grid { grid-template-columns: 1fr; }
+  .evidence-grid > div, .evidence-grid > div + div { padding: 13px 0; border-left: 0; border-bottom: 1px solid var(--border); }
+  .evidence-grid > div:last-child { border-bottom: 0; }
+  .lab-verify-actions { align-items: stretch; flex-direction: column; }
+  .material-list article { grid-template-columns: 1fr; gap: 12px; }
+  .material-list article > div:last-child { justify-content: space-between; }
+  .access-state { max-width: none; text-align: left; }
   .practice-heading { align-items: center; }
   .practice-options, .builder-fields { grid-template-columns: 1fr; }
   .builder-fields label:last-child:nth-child(odd) { grid-column: auto; }

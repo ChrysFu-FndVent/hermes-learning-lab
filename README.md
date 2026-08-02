@@ -1,3 +1,5 @@
+<a id="readme-top"></a>
+
 <!-- README-ARCHITECT: visual-shell -->
 <p align="center">
   <img src="assets/readme/hermes-learning-lab-banner.svg" alt="hermes-learning-lab project banner" width="100%" />
@@ -9,80 +11,98 @@
 </p>
 <!-- README-ARCHITECT: visual-shell end -->
 
-<div align="right">
-  <a href="#简体中文">简体中文</a> | <a href="#english">English</a>
-</div>
-
-<a id="简体中文"></a>
-
 <div align="center">
 
 # Hermes Learning Lab
 
-**一套从首次启动到安全生产化的 Hermes Agent 中文交互课程。**
+**Learn Hermes by operating it, verifying the result, and recovering from failure.**
 
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0b0b0a)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
-[![Lessons](https://img.shields.io/badge/课程-13%20课-e7a83e)](#学习路线)
-[![Phases](https://img.shields.io/badge/路径-4%20阶段-70b58a)](./CURRICULUM.md)
-[![Safety](https://img.shields.io/badge/运行模式-模拟%20%2B%20明示只读检测-d56c62)](#安全边界)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=0b0b0a)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES2023-F7DF1E?style=for-the-badge&logo=javascript&logoColor=0b0b0a)](./src/)
+[![Lessons](https://img.shields.io/badge/Lessons-13-e7a83e?style=for-the-badge)](./CURRICULUM.md)
 
-[快速开始](#快速开始) · [完整课程](./CURRICULUM.md) · [实验手册](./docs/labs/README.md) · [排错指南](./docs/TROUBLESHOOTING.md) · [资料研究](./RESEARCH.md) · [设计方案](./DESIGN.md)
+[课程大纲](./CURRICULUM.md) · [实验手册](./docs/labs/README.md) · [电子资料库](./resources/README.md) · [排错指南](./docs/TROUBLESHOOTING.md)
 
 </div>
 
-![Hermes Learning Lab 三栏课程工作台](./preview.png)
+![Hermes Learning Lab interactive course workspace](./preview.png)
 
-## 目录
+<div align="right"><a href="#简体中文">简体中文</a> | <a href="#english">English</a></div>
 
-- [这是什么](#这是什么)
-- [功能亮点](#功能亮点)
+<a id="简体中文"></a>
+
+## 简体中文
+
+<details>
+<summary>目录</summary>
+
+- [项目简介](#项目简介)
+- [课程特色](#课程特色)
+- [教学闭环](#教学闭环)
 - [学习路线](#学习路线)
-- [快速开始](#快速开始)
+- [使用方法](#使用方法)
+- [电子资料在线预览](#电子资料在线预览)
+- [系统架构](#系统架构)
 - [项目结构](#项目结构)
-- [安全边界](#安全边界)
-- [资料与署名](#资料与署名)
+- [检查与安全边界](#检查与安全边界)
+- [资料与许可](#资料与许可)
 
-## 这是什么
+</details>
 
-Hermes Learning Lab 是一个依据 [Hermes Agent 官方文档](https://hermes-agent.nousresearch.com/docs/)、[Nous Hermes 模型资料](https://huggingface.co/NousResearch/Hermes-4.3-36B)和 [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners) 教学结构制作的中文学习平台。
+## 项目简介
 
-每课都形成一个可验证闭环：
+Hermes Learning Lab 是一个面向零基础学习者的 Hermes Agent 中文交互课程。课程从 Desktop 和飞书真实界面开始，再逐步进入 CLI、模型切换、Prompt 契约、Memory、Skills、自动化、并行任务、安全隔离与恢复。
 
-```text
-课前诊断 -> 核心讲解 -> Agent 轨迹 -> 可执行实验 -> 成功标准 -> 课后检查 -> 延伸资料
-```
+课程结构参考 [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners)：先准备环境和诊断基础，再通过独立实验、明确输入、预期结果、课后检查与延伸资料形成学习闭环。Hermes 的命令和配置事实以[官方文档](https://hermes-agent.nousresearch.com/docs/)及[官方仓库](https://github.com/NousResearch/hermes-agent)为准。
 
 > [!NOTE]
-> 本项目是独立社区教学项目，不是 Nous Research 或 Microsoft 的官方产品。
+> 这是独立社区教学项目，不是 Nous Research 或 Microsoft 的官方产品。
 
-## 功能亮点
+## 课程特色
 
-| 学习体验 | 工程与安全 |
+| 操作学习 | 结果与安全 |
 |---|---|
-| 13 课、4 阶段渐进路径 | React + Vite 纯前端架构 |
-| macOS、Windows、WSL2 与桌面端安装导航 | 官方命令可复制；真实操作由用户在应用中执行 |
-| 官方 Desktop 实景图与可点击界面标注 | 图片本地保存并链接可核验来源 |
-| 飞书控制台/客户端逐屏路径 | 覆盖 @提及门、Typing、原生审批卡与 200340 排错 |
-| Desktop 与飞书真实回执验收 | 用户点击后才运行最小化本机只读状态检测 |
-| 每课包含先修、诊断与实验验收 | Hermes 命令只模拟展示 |
-| 单选、多选与配置构建器 | 不读取本机配置或凭据 |
-| Agent 轨迹与即时纠错 | localStorage v2，兼容迁移 v1 |
-| 阶段进度和掌握度反馈 | 桌面、平板、手机响应式布局 |
-| 官方技术资料与模型卡入口 | 无账号、数据库或远程埋点 |
+| macOS、Windows 原生、WSL2 与 Desktop 安装路径 | 安装后先完成 Setup、普通聊天和 Doctor 基线 |
+| Hermes Desktop 官方实景图与可点击地标 | 用户主动粘贴 `DESKTOP_OK` 回执，课程不读取窗口内容 |
+| 飞书控制台与客户端双路径指南 | 覆盖 WebSocket、@提及、Typing、审批卡和 `200340` 排错 |
+| 13 课单线渐进路径 | 定义内容压缩为操作所需的最小背景 |
+| 每课有课前诊断、四步操作和真实实验 | 每项实验都给出成功标准、证据与恢复动作 |
+| 单选、多选、配置构建器和模拟界面 | 实验验收与课后检查组成双证据掌握度 |
+| 官方资料与社区延伸阅读按课匹配 | 社区内容不替代官方命令核验 |
+| 本地进度自动保存 | `localStorage v3`，兼容迁移 v1/v2 记录 |
+
+## 教学闭环
+
+每课都执行同一套可验证流程：
+
+```text
+课前诊断
+  -> 必要说明与核心操作
+  -> Agent 行动轨迹
+  -> 真实环境实验
+  -> 逐项结果核验
+  -> 保存证据与演练恢复
+  -> 课后检查
+  -> 官方资料与社区延伸阅读
+```
+
+课程不会显示学习时长估计。完成课后题不等于完成真实操作；只有实验验收和课后检查都通过，本课才计入掌握度。
 
 ## 学习路线
 
-| 阶段 | 课程 | 能力目标 |
+| 阶段 | 课程 | 交付结果 |
 |---|---|---|
-| I 启动与基础 | 00 下载与多端接入 · 01 环境与诊断 · 02 Agent Loop · 03 模型切换与回退 | 安装并完成桌面/飞书首轮体验，建立并恢复可工作的聊天基线 |
-| II 可靠交互 | 04 Prompt 契约 · 05 工具/Context/审批 · 06 Session/Memory/SOUL | 让任务可验收、工具可审计、上下文不过度记忆 |
-| III 扩展与自动化 | 07 Skill 安装/冒烟测试 · 08 Gateway/Cron/Hooks/Batch · 09 并行任务与收口 | 安装并验收能力、构建自动化、观察并收口独立任务 |
-| IV 工程化与进阶 | 10 Sandbox/Egress/ACP · 11 备份/更新/恢复 · 12 毕业项目 | 隔离执行、验证恢复点、交付可恢复生产工作流 |
+| I 启动与基础 | 00 下载与多端接入 · 01 环境与诊断 · 02 Agent Loop · 03 模型切换与回退 | Desktop/飞书回执、Doctor 基线、只读工具证据、模型回切记录 |
+| II 可靠交互 | 04 Prompt 契约 · 05 工具/Context/审批 · 06 Session/Memory/SOUL | 可校验 Prompt、最小工具范围、脱敏 Memory |
+| III 扩展与自动化 | 07 Skill 安装/冒烟测试 · 08 Gateway/Cron/Hooks/Batch · 09 并行任务与收口 | Skill 审查记录、幂等自动化、`/agents` 收口证据 |
+| IV 工程化与进阶 | 10 Sandbox/Egress/ACP · 11 备份/更新/恢复 · 12 毕业项目 | 隔离负向测试、恢复演练、评测驱动工作流 |
 
-完整先修关系、实验与成功标准见 [CURRICULUM.md](./CURRICULUM.md)。
+完整先修关系和掌握标准见 [CURRICULUM.md](./CURRICULUM.md)，真实环境记录模板见 [docs/labs/README.md](./docs/labs/README.md)。
 
-## 快速开始
+## 使用方法
+
+### 1. 启动交互式网站
 
 环境要求：Node.js 18+、npm 9+。
 
@@ -93,120 +113,191 @@ npm install
 npm run dev
 ```
 
-Vite 默认提供 `http://localhost:5173/`。质量检查：
+打开终端显示的地址；默认是 `http://127.0.0.1:5173/`。如果该端口已占用，Vite 会显示实际使用的新端口。
+
+### 2. 完成一门课程
+
+1. 从左侧选择课程，先完成不计分的课前诊断。
+2. 按顺序查看 Agent 轨迹和四个核心操作步骤。
+3. 在专用练习目录、测试 Profile 或 Sandbox 中执行真实实验。
+4. 对照“操作结果检验”逐项核对成功标准。
+5. 保存课程指定的脱敏证据，并确认失败恢复动作可执行。
+6. 点击“确认结果已核验”，再通过课后检查。
+7. 当右侧显示“本课已取得实验与课后检查双证据”后进入下一课。
+
+### 3. 使用 Desktop 与飞书模拟
+
+第 00 课包含 Hermes Desktop 和飞书端模拟。模拟练习用于熟悉会话、模型、@提及和工具审批，不会连接真实 Hermes。真实界面验收需要学习者在 Desktop 或飞书中主动执行校验 Prompt，再把脱敏回执粘贴回课程。
+
+### 4. 检测本机状态
+
+只有点击“检测本机状态”时，本地 Vite 服务才执行最小只读探针：检查 Hermes 命令是否存在、Desktop 进程是否运行，以及 Gateway 是否处于可用状态。接口只返回布尔值，不返回安装路径、配置、密钥、日志、会话或消息。
+
+> [!IMPORTANT]
+> 静态 GitHub Pages 或直接打开构建文件时没有本机探针；课程模拟、资料链接和浏览器进度仍可使用。
+
+### 5. 构建本地预览
 
 ```bash
 npm run lint
 npm run build
+npm run preview
 ```
+
+## 电子资料在线预览
+
+仓库的 [resources/](./resources/) 目录只保存分类索引、原创摘要、访问状态和来源链接，不复制第三方 PDF、文章正文或视频字幕。
+
+| 资料 | 适合学习 | 在线预览 |
+|---|---|---|
+| Hermes Agent 官方文档 | 当前安装、Desktop、飞书、Skills、Memory、Cron、安全与排错 | [打开文档](https://hermes-agent.nousresearch.com/docs/) |
+| NousResearch/hermes-agent | 当前命令、Release、源码与实现边界 | [打开仓库](https://github.com/NousResearch/hermes-agent) |
+| Hermes Agent 橙皮书 2.0 | 中文整体理解、界面、记忆、多 Agent 与安全 | [预览中文版 PDF](https://github.com/alchaincyf/hermes-agent-orange-book/blob/main/Hermes-Agent%E6%A9%99%E7%9A%AE%E4%B9%A62.0-v260607.pdf) |
+| hermes-agent-zh | 中文安装、Provider、自动化、IM 和 FAQ | [打开教程](https://github.com/dongsheng123132/hermes-agent-zh) |
+| awesome-hermes-agent | Skills、插件、工具、界面与进阶指南 | [打开索引](https://github.com/0xNyk/awesome-hermes-agent) |
+| Hermes Agent 保姆级教学 | 安装、Memory、Subagent、Cron、Skills、备份和防火墙演示 | [观看 YouTube](https://www.youtube.com/watch?v=-EivK7vpOXY) |
+| Hermes Agent 新手使用十大技巧 | 模型、SOUL、Memory、Doctor、UI、迁移和 Skills | [观看 YouTube](https://www.youtube.com/watch?v=hLiN_X7dzdw) |
+| Hermes Agent 桌面版教程 | Windows、macOS、Linux Desktop 真实界面 | [观看 YouTube](https://www.youtube.com/watch?v=FdSVeOAd480) |
+
+更多访问状态与课程映射：
+
+- [资料库首页](./resources/README.md)
+- [官方资料与命令核验](./resources/OFFICIAL.md)
+- [社区电子书、文章与视频](./resources/COMMUNITY.md)
+- [课程与资料映射](./resources/LESSON-MAP.md)
+
+> [!WARNING]
+> YouTube 字幕目前未稳定取得；知乎文章的无登录抓取返回 `403`；一个飞书旧文档链接返回 `404`。这些来源不会用于证明具体命令正确。
+
+## 系统架构
+
+![Hermes Learning Lab system architecture](./assets/readme/learning-system.drawio.png)
+
+React 工作区从 `src/data.js` 读取课程和资料数据。诊断、实验验收、课后检查与最近位置保存在浏览器 `localStorage`；只有用户明确点击后，Vite 中间件才调用只读本机状态探针。可编辑图源见 [learning-system.drawio](./assets/readme/learning-system.drawio)。
 
 ## 项目结构
 
 ```text
 hermes-learning-lab/
 ├── src/
-│   ├── App.jsx                 # 学习引擎、视图与进度迁移
-│   ├── data.js                 # 13 课、安装路径、来源和架构数据
-│   └── styles.css              # 三栏工作台与响应式设计
+│   ├── App.jsx                    # 学习引擎、实验验收、进度迁移与视图
+│   ├── data.js                    # 13 课、资料映射、安装与界面数据
+│   └── styles.css                 # 三栏工作台与响应式样式
+├── resources/
+│   ├── README.md                  # 电子资料总索引
+│   ├── OFFICIAL.md                # 官方资料与命令核验入口
+│   ├── COMMUNITY.md               # 社区电子书、文章与视频
+│   └── LESSON-MAP.md              # 逐课资料映射
 ├── docs/
-│   ├── labs/README.md          # 真实环境实验手册
-│   ├── TROUBLESHOOTING.md      # 安装、模型、工具和自动化排错
-│   └── adr/                    # 架构决策记录
-├── public/ui-reference/        # 官方界面参考图及来源说明
-├── CURRICULUM.md               # 课程体系与知识递进
-├── DESIGN.md                   # 产品、交互与技术设计
-├── RESEARCH.md                 # 资料研究与采用决策
-└── preview.png                 # 当前界面预览
+│   ├── labs/README.md             # 真实环境实验手册
+│   ├── TROUBLESHOOTING.md         # 安装、界面、工具和恢复排错
+│   └── adr/                       # 架构决策记录
+├── assets/readme/                 # README 架构图与可编辑图源
+├── public/ui-reference/           # 有来源说明的官方界面参考图
+├── CURRICULUM.md                  # 课程体系和双证据掌握标准
+├── RESEARCH.md                    # 资料研究、采用边界和版本说明
+└── preview.png                    # 当前产品界面截图
 ```
 
-## 安全边界
+## 检查与安全边界
 
-浏览器模拟默认不会调用 Shell、读取 `~/.hermes`、写入配置、安装扩展、连接消息平台或上传进度。用户点击“检测本机状态”时，本地 Vite 服务只执行 `which/where hermes`、进程存在性检查和 `hermes gateway status` 三类只读探针，并且只返回布尔状态；不会返回路径、配置、日志、密钥、会话或飞书消息。真实消息回执由学习者主动粘贴并仅在浏览器内判定。
+```bash
+npm run lint
+npm run build
+```
 
-浏览器模拟的取舍见 [ADR 0001](./docs/adr/0001-browser-simulation-first.md)，明示只读检测边界见 [ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md)。真实实验前请核对 [Hermes 当前官方文档](https://hermes-agent.nousresearch.com/docs/)。
+- 浏览器模拟不会调用 Shell、修改 `~/.hermes`、安装扩展或连接消息平台。
+- 本机探针只在明确点击后执行，并只返回 Hermes、Desktop、Gateway 三类布尔状态。
+- 真实实验建议使用专用目录、隔离 Profile、Sandbox 和单次审批。
+- 回执和实验记录不得包含 Token、App Secret、用户 ID、聊天历史或个人路径。
+- 社区资料中的命令必须回到当前官方文档复核。
 
-## 资料与署名
+设计取舍见 [ADR 0001](./docs/adr/0001-browser-simulation-first.md) 和 [ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md)。
 
-- [Hermes Agent](https://github.com/NousResearch/hermes-agent)：运行时与命令事实源
-- [Hermes 4.3 model card](https://huggingface.co/NousResearch/Hermes-4.3-36B)：模型、Prompt、Serving 与采样事实源
-- [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners)：课程结构与实验教学参考
-- 小红书、知乎与 YouTube 教程：只用于识别高频实操主题，访问状态与采用边界见 [RESEARCH.md](./RESEARCH.md)
-- [RESEARCH.md](./RESEARCH.md)：来源、结论与版本注意事项
+## 资料与许可
+
+- [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners)：课程 Setup、实验、测验和延伸阅读结构参考。
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent)：运行时、命令和界面事实源。
+- [Hermes 4.3 model card](https://huggingface.co/NousResearch/Hermes-4.3-36B)：模型、Prompt、Serving 与采样资料。
+- [RESEARCH.md](./RESEARCH.md)：来源核验、采用决策和版本风险。
+
+本仓库当前未包含 `LICENSE` 文件。公开可见不等于自动授予复制、修改或再分发权；第三方资料继续受各自来源的许可与版权条款约束。
+
+<p align="right"><a href="#readme-top">返回顶部</a></p>
 
 ---
 
-<div align="center"><sub>Learn the boundary. Run the lab. Ship with evidence.</sub></div>
-
 <a id="english"></a>
 
-<div align="center">
+## English
 
-# Hermes Learning Lab
+<details>
+<summary>Table of Contents</summary>
 
-**An interactive Chinese curriculum for learning Hermes Agent, from first setup to safe production workflows.**
-
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=0b0b0a)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
-[![Lessons](https://img.shields.io/badge/Lessons-13-e7a83e)](#learning-path)
-[![Phases](https://img.shields.io/badge/Phases-4-70b58a)](./CURRICULUM.md)
-[![Safety](https://img.shields.io/badge/Runtime-Simulation%20%2B%20Explicit%20Read--only%20Probe-d56c62)](#safety-boundaries)
-
-[Quick Start](#quick-start) · [Curriculum](./CURRICULUM.md) · [Lab Guide](./docs/labs/README.md) · [Troubleshooting](./docs/TROUBLESHOOTING.md) · [Research](./RESEARCH.md) · [Design](./DESIGN.md)
-
-</div>
-
-![Hermes Learning Lab three-column course workspace](./preview.png)
-
-## Table of Contents
-
-- [What It Is](#what-it-is)
+- [Overview](#overview)
 - [Highlights](#highlights)
+- [Learning Loop](#learning-loop)
 - [Learning Path](#learning-path)
-- [Quick Start](#quick-start)
+- [How to Use](#how-to-use)
+- [Online Learning Materials](#online-learning-materials)
+- [Architecture](#architecture)
 - [Project Structure](#project-structure)
-- [Safety Boundaries](#safety-boundaries)
-- [Sources](#sources)
+- [Checks and Safety](#checks-and-safety)
+- [Sources and License](#sources-and-license)
 
-## What It Is
+</details>
 
-Hermes Learning Lab is a Chinese-language learning platform based on the [official Hermes Agent documentation](https://hermes-agent.nousresearch.com/docs/), the [Nous Hermes model card](https://huggingface.co/NousResearch/Hermes-4.3-36B), and the curriculum structure of [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners).
+## Overview
 
-Every lesson uses the same verifiable loop:
+Hermes Learning Lab is a Chinese interactive curriculum for learners new to Hermes Agent. It starts with the real Desktop and Feishu surfaces, then progresses through CLI usage, model switching, prompt contracts, Memory, Skills, automation, delegation, isolation, and recovery.
 
-```text
-Pre-quiz -> Core concepts -> Agent trace -> Hands-on lab -> Success criteria -> Post-check -> References
-```
+The course adapts the structure of [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners): environment setup and diagnostics come first, followed by self-contained labs with explicit inputs, expected results, post-checks, and further reading. Hermes commands and configuration facts are grounded in the [official documentation](https://hermes-agent.nousresearch.com/docs/) and [official repository](https://github.com/NousResearch/hermes-agent).
 
 > [!NOTE]
-> This is an independent community education project, not an official product of Nous Research or Microsoft.
+> This is an independent community education project, not an official Nous Research or Microsoft product.
 
 ## Highlights
 
-| Learning Experience | Engineering and Safety |
+| Hands-on learning | Evidence and safety |
 |---|---|
-| 13 lessons across 4 progressive phases | Pure React + Vite frontend |
-| macOS, Windows, WSL2, and Desktop setup guides | Copyable official commands; real actions stay user-controlled |
-| Official Desktop UI reference with clickable landmarks | Local image with a verifiable source link |
-| Feishu console and client UI routes | Mentions, typing state, native approvals, and error 200340 recovery |
-| Desktop and Feishu receipt checks | Minimal local read-only probes run only after an explicit click |
-| Prerequisites, diagnostics, and lab acceptance in every lesson | Hermes commands are simulations only |
-| Single-choice, multiple-choice, and configuration builders | No access to local configuration or credentials |
-| Agent traces and targeted feedback | localStorage v2 with v1 migration |
-| Phase progress and mastery tracking | Responsive desktop, tablet, and mobile layouts |
-| Direct links to official technical sources | No accounts, database, or remote analytics |
+| macOS, native Windows, WSL2, and Desktop setup routes | Setup, basic chat, and Doctor establish the first baseline |
+| Official Hermes Desktop screenshot with interactive landmarks | Learners submit `DESKTOP_OK`; the course never reads window content |
+| Feishu developer-console and client walkthroughs | Covers WebSocket, mentions, typing, approval cards, and error `200340` |
+| One progressive 13-lesson path | Theory is reduced to the minimum needed for each operation |
+| Pre-check, four operational steps, and a real lab in every lesson | Every lab defines success criteria, evidence, and recovery actions |
+| Choices, builders, and interface simulations | Lab verification plus the post-check forms two-part mastery evidence |
+| Official references and per-lesson community readings | Community material never replaces official command verification |
+| Automatic local progress | `localStorage v3` with migration from v1/v2 |
+
+## Learning Loop
+
+```text
+Pre-check
+  -> Essential context and core operations
+  -> Observable agent trace
+  -> Real-environment lab
+  -> Result checklist
+  -> Evidence capture and recovery rehearsal
+  -> Post-check
+  -> Official and community references
+```
+
+The course shows no estimated lesson durations. A lesson contributes to mastery only after both its real lab and post-check are verified.
 
 ## Learning Path
 
-| Phase | Lessons | Outcome |
+| Phase | Lessons | Evidence produced |
 |---|---|---|
-| I Setup and Foundations | 00 Download and Channels · 01 Environment and Doctor · 02 Agent Loop · 03 Model Switching and Recovery | Install Hermes, rehearse Desktop/Feishu, and establish a recoverable chat baseline |
-| II Reliable Interaction | 04 Prompt Contracts · 05 Tools/Context/Approval · 06 Sessions/Memory/SOUL | Make tasks testable, tools auditable, and context appropriately scoped |
-| III Extensions and Automation | 07 Skill Install/Smoke Test · 08 Gateway/Cron/Hooks/Batch · 09 Parallel Tasks and Review | Install and verify capabilities, automate safely, and review independent work |
-| IV Production Engineering | 10 Sandbox/Egress/ACP · 11 Backup/Update/Restore · 12 Capstone | Isolate execution, validate recovery points, and deliver recoverable workflows |
+| I Setup and Foundations | 00 Download and Channels · 01 Environment and Doctor · 02 Agent Loop · 03 Model Switching and Recovery | Desktop/Feishu receipts, Doctor baseline, read-only tool evidence, model rollback record |
+| II Reliable Interaction | 04 Prompt Contracts · 05 Tools/Context/Approval · 06 Sessions/Memory/SOUL | Validated prompt, minimal tool scope, redacted Memory |
+| III Extensions and Automation | 07 Skill Install/Smoke Test · 08 Gateway/Cron/Hooks/Batch · 09 Parallel Tasks and Review | Skill review, idempotent automation, `/agents` closure evidence |
+| IV Production Engineering | 10 Sandbox/Egress/ACP · 11 Backup/Update/Restore · 12 Capstone | Isolation negative tests, restore rehearsal, evaluation-driven workflow |
 
-See [CURRICULUM.md](./CURRICULUM.md) for prerequisites, lab deliverables, and mastery criteria.
+See [CURRICULUM.md](./CURRICULUM.md) for prerequisites and mastery criteria, and [docs/labs/README.md](./docs/labs/README.md) for the real-environment evidence template.
 
-## Quick Start
+## How to Use
+
+### 1. Start the interactive site
 
 Requirements: Node.js 18+ and npm 9+.
 
@@ -217,44 +308,101 @@ npm install
 npm run dev
 ```
 
-Vite normally serves the app at `http://localhost:5173/`. Quality checks:
+Open the URL printed by Vite, normally `http://127.0.0.1:5173/`. If the port is busy, Vite reports the replacement port.
+
+### 2. Complete a lesson
+
+1. Select a lesson and complete the ungraded pre-check.
+2. Follow the agent trace and four core operational steps.
+3. Run the real lab in a dedicated directory, test Profile, or Sandbox.
+4. Check every item under result verification against the actual outcome.
+5. Save the requested redacted evidence and confirm the recovery action is executable.
+6. Record the lab verification, then pass the post-check.
+7. Continue only after the progress rail confirms both forms of evidence.
+
+### 3. Use the Desktop and Feishu simulations
+
+Lesson 00 includes Desktop and Feishu simulations for sessions, models, mentions, and tool approval. They never connect to a real Hermes runtime. Real verification requires the learner to run the prompt in Desktop or Feishu and explicitly submit a redacted receipt.
+
+### 4. Check local status
+
+Only an explicit click invokes the local Vite probe. It checks whether the Hermes command exists, whether the Desktop process is running, and whether Gateway reports a usable state. It returns booleans only, never paths, configuration, secrets, logs, sessions, or messages.
+
+> [!IMPORTANT]
+> Static hosting and direct build-file access do not provide the local probe. Simulations, resource links, and browser progress still work.
+
+### 5. Build a local preview
 
 ```bash
 npm run lint
 npm run build
+npm run preview
 ```
+
+## Online Learning Materials
+
+The [resources/](./resources/) folder contains indexes, original summaries, access states, and source links only. It does not copy third-party PDFs, article bodies, or video transcripts.
+
+| Material | Best for | Preview |
+|---|---|---|
+| Hermes Agent documentation | Current setup, Desktop, Feishu, Skills, Memory, Cron, security | [Open docs](https://hermes-agent.nousresearch.com/docs/) |
+| NousResearch/hermes-agent | Current commands, releases, source, implementation boundaries | [Open repository](https://github.com/NousResearch/hermes-agent) |
+| Hermes Agent Orange Book 2.0 | Chinese overview of UI, memory, multi-agent workflows, and security | [Preview Chinese PDF](https://github.com/alchaincyf/hermes-agent-orange-book/blob/main/Hermes-Agent%E6%A9%99%E7%9A%AE%E4%B9%A62.0-v260607.pdf) |
+| hermes-agent-zh | Chinese setup, providers, automation, messaging, and FAQ | [Open tutorial](https://github.com/dongsheng123132/hermes-agent-zh) |
+| awesome-hermes-agent | Skills, plugins, tools, surfaces, and advanced guides | [Open index](https://github.com/0xNyk/awesome-hermes-agent) |
+| Full beginner tutorial | Setup, Memory, Subagents, Cron, Skills, backup, firewall | [Watch on YouTube](https://www.youtube.com/watch?v=-EivK7vpOXY) |
+| Ten beginner tips | Models, SOUL, Memory, Doctor, UI, migration, Skills | [Watch on YouTube](https://www.youtube.com/watch?v=hLiN_X7dzdw) |
+| Desktop release tutorial | Real Windows, macOS, and Linux Desktop UI | [Watch on YouTube](https://www.youtube.com/watch?v=FdSVeOAd480) |
+
+Browse the [resource index](./resources/README.md), [official references](./resources/OFFICIAL.md), [community materials](./resources/COMMUNITY.md), and [lesson map](./resources/LESSON-MAP.md).
+
+> [!WARNING]
+> YouTube transcripts were not reliably available. Anonymous retrieval of the Zhihu article returned `403`, and an older Feishu document returned `404`. These sources are not used to validate concrete commands.
+
+## Architecture
+
+![Hermes Learning Lab system architecture](./assets/readme/learning-system.drawio.png)
+
+The React workspace loads curriculum and resource data from `src/data.js`. Diagnostics, lab verification, post-checks, and the current position are saved in browser `localStorage`. The Vite middleware reaches the read-only local probe only after an explicit click. The editable source is [learning-system.drawio](./assets/readme/learning-system.drawio).
 
 ## Project Structure
 
 ```text
 hermes-learning-lab/
 ├── src/                         # React learning engine, curriculum data, styles
+├── resources/                   # Electronic material indexes and lesson map
 ├── docs/labs/README.md          # Real-environment lab guide
-├── docs/TROUBLESHOOTING.md      # Setup, model, tools, and automation recovery
+├── docs/TROUBLESHOOTING.md      # Setup, UI, tooling, and recovery guide
 ├── docs/adr/                    # Architecture decisions
-├── public/ui-reference/         # Attributed official UI reference assets
-├── CURRICULUM.md                # Curriculum map and progression
-├── DESIGN.md                    # Product and technical design
-├── RESEARCH.md                  # Sources and adoption decisions
-└── preview.png                  # Current desktop preview
+├── assets/readme/               # README architecture asset and editable source
+├── public/ui-reference/         # Attributed official UI reference
+├── CURRICULUM.md                # Curriculum and two-part mastery model
+├── RESEARCH.md                  # Source research and evidence limits
+└── preview.png                  # Current product screenshot
 ```
 
-## Safety Boundaries
+## Checks and Safety
 
-Browser simulations do not invoke a shell, read `~/.hermes`, change configuration, install extensions, connect to messaging platforms, or upload progress. When the learner explicitly clicks the local status check, the Vite server runs only command discovery, process-presence, and `hermes gateway status` read-only probes and returns booleans. It never returns paths, configuration, logs, secrets, sessions, or messages. Receipt text is submitted explicitly and evaluated in the browser.
+```bash
+npm run lint
+npm run build
+```
 
-See [ADR 0001](./docs/adr/0001-browser-simulation-first.md) for simulation tradeoffs and [ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md) for the local verification boundary. Verify real commands against the current [Hermes documentation](https://hermes-agent.nousresearch.com/docs/).
+- Browser simulations never invoke a shell, modify `~/.hermes`, install extensions, or connect messaging platforms.
+- The local probe runs only after an explicit click and returns three boolean status values.
+- Real labs should use dedicated directories, isolated Profiles, Sandboxes, and one-time approvals.
+- Receipts and reports must exclude tokens, app secrets, user IDs, chat history, and personal paths.
+- Community commands must be checked against the current official documentation.
 
-## Sources
+See [ADR 0001](./docs/adr/0001-browser-simulation-first.md) and [ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md) for the implementation boundaries.
 
-- [Hermes Agent](https://github.com/NousResearch/hermes-agent): runtime and command source of truth
-- [Hermes 4.3 model card](https://huggingface.co/NousResearch/Hermes-4.3-36B): model, prompt, serving, and sampling details
-- [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners): curriculum and lab structure reference
-- Xiaohongshu, Zhihu, and YouTube tutorials: used only to identify recurring hands-on topics; access status and evidence limits are documented in [RESEARCH.md](./RESEARCH.md)
-- [RESEARCH.md](./RESEARCH.md): research conclusions and version notes
+## Sources and License
 
----
+- [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners): setup, lab, quiz, and further-reading structure.
+- [Hermes Agent](https://github.com/NousResearch/hermes-agent): runtime, commands, and UI facts.
+- [Hermes 4.3 model card](https://huggingface.co/NousResearch/Hermes-4.3-36B): model, prompt, serving, and sampling references.
+- [RESEARCH.md](./RESEARCH.md): research findings, adoption decisions, and version risks.
 
-<div align="center"><sub>Learn the boundary. Run the lab. Ship with evidence.</sub></div>
+This repository currently has no `LICENSE` file. Public visibility does not grant permission to copy, modify, or redistribute it by default. Third-party materials remain subject to their source licenses and copyright terms.
 
-<p align="right"><a href="#简体中文">返回简体中文</a></p>
+<p align="right"><a href="#readme-top">Back to top</a></p>

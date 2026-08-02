@@ -36,24 +36,30 @@ import {
   Wifi,
   X,
 } from "lucide-react";
-import { architectureLayers, lessons, onboardingTracks, phases, repositories, surfaceGuides } from "./data";
+import { architectureLayers, learningResources, lessons, onboardingTracks, phases, repositories, surfaceGuides } from "./data";
 
-const STORAGE_KEY = "hermes-learning-lab-progress-v2";
+const STORAGE_KEY = "hermes-learning-lab-progress-v3";
+const PREVIOUS_STORAGE_KEY = "hermes-learning-lab-progress-v2";
 const LEGACY_STORAGE_KEY = "hermes-learning-lab-progress-v1";
 
 function readProgress() {
   try {
     const current = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (current?.version === 2 && Array.isArray(current.completed)) return current;
+    if (current?.version === 3 && Array.isArray(current.completed)) return current;
+
+    const previous = JSON.parse(localStorage.getItem(PREVIOUS_STORAGE_KEY));
+    if (previous?.version === 2 && Array.isArray(previous.completed)) {
+      return { ...previous, version: 3, verifiedLabs: [] };
+    }
 
     const legacy = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY));
     if (legacy?.version === 1 && Array.isArray(legacy.completed)) {
-      return { version: 2, completed: legacy.completed, activeLesson: legacy.activeLesson || 0, diagnostics: {} };
+      return { version: 3, completed: legacy.completed, activeLesson: legacy.activeLesson || 0, diagnostics: {}, verifiedLabs: [] };
     }
   } catch {
     // Invalid local data must never block the course.
   }
-  return { version: 2, completed: [], activeLesson: 0, diagnostics: {} };
+  return { version: 3, completed: [], activeLesson: 0, diagnostics: {}, verifiedLabs: [] };
 }
 
 function ProgressRing({ value }) {
@@ -72,7 +78,8 @@ function ProgressRing({ value }) {
   );
 }
 
-function CourseSidebar({ activeIndex, completed, onSelect, open, onClose }) {
+function CourseSidebar({ activeIndex, completed, verifiedLabs, onSelect, open, onClose }) {
+  const mastered = lessons.filter((lesson) => completed.includes(lesson.id) && verifiedLabs.includes(lesson.id));
   return (
     <>
       {open ? <button className="sidebar-scrim" aria-label="关闭课程导航" onClick={onClose} /> : null}
@@ -83,13 +90,13 @@ function CourseSidebar({ activeIndex, completed, onSelect, open, onClose }) {
           <button className="icon-button sidebar-close" onClick={onClose} aria-label="关闭课程导航"><X size={18} /></button>
         </div>
 
-        <div className="course-progress-copy"><span>学习进度</span><strong>{completed.length} / {lessons.length}</strong></div>
-        <div className="linear-progress" aria-hidden="true"><span style={{ width: `${(completed.length / lessons.length) * 100}%` }} /></div>
+        <div className="course-progress-copy"><span>双证据掌握</span><strong>{mastered.length} / {lessons.length}</strong></div>
+        <div className="linear-progress" aria-hidden="true"><span style={{ width: `${(mastered.length / lessons.length) * 100}%` }} /></div>
 
         <nav className="lesson-nav" aria-label="课程目录">
           {phases.map((phase) => {
             const phaseLessons = lessons.filter((lesson) => lesson.phaseId === phase.id);
-            const phaseDone = phaseLessons.filter((lesson) => completed.includes(lesson.id)).length;
+            const phaseDone = phaseLessons.filter((lesson) => completed.includes(lesson.id) && verifiedLabs.includes(lesson.id)).length;
             return (
               <div className="phase-group" key={phase.id}>
                 <div className="phase-heading">
@@ -98,7 +105,7 @@ function CourseSidebar({ activeIndex, completed, onSelect, open, onClose }) {
                 </div>
                 {phaseLessons.map((lesson) => {
                   const index = lessons.findIndex((item) => item.id === lesson.id);
-                  const isComplete = completed.includes(lesson.id);
+                  const isComplete = completed.includes(lesson.id) && verifiedLabs.includes(lesson.id);
                   const isActive = activeIndex === index;
                   return (
                     <button
@@ -141,7 +148,7 @@ function AppTopbar({ view, setView, lesson, phase, onOpenMenu }) {
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
-            <button key={tab.id} role="tab" aria-selected={view === tab.id} className={view === tab.id ? "is-active" : ""} onClick={() => setView(tab.id)}>
+            <button key={tab.id} role="tab" aria-label={tab.label} title={tab.label} aria-selected={view === tab.id} className={view === tab.id ? "is-active" : ""} onClick={() => setView(tab.id)}>
               <Icon size={15} /><span>{tab.label}</span>
             </button>
           );
@@ -530,7 +537,15 @@ function InteractionPractice() {
   );
 }
 
-function LabBrief({ lab }) {
+function LabBrief({ lab, verified, onVerify }) {
+  const [checked, setChecked] = useState(() => verified ? lab.successCriteria : []);
+  const allChecked = checked.length === lab.successCriteria.length;
+
+  const toggleCriterion = (criterion) => {
+    if (verified) return;
+    setChecked((current) => current.includes(criterion) ? current.filter((item) => item !== criterion) : [...current, criterion]);
+  };
+
   return (
     <section className="lab-brief" aria-labelledby="lab-title">
       <div className="lab-title-row"><FlaskConical size={18} /><div><span className="section-label">可执行实验</span><h2 id="lab-title">{lab.task}</h2></div></div>
@@ -538,6 +553,23 @@ function LabBrief({ lab }) {
         <div><strong>输入</strong><p>{lab.input}</p></div>
         <div><strong>操作步骤</strong><ol>{lab.procedure.map((item) => <li key={item}>{item}</li>)}</ol></div>
         <div><strong>成功标准</strong><ul>{lab.successCriteria.map((item) => <li key={item}><CheckCircle2 size={14} />{item}</li>)}</ul></div>
+      </div>
+      <div className="lab-verification">
+        <div className="lab-verification-heading"><div><span className="section-label">操作结果检验</span><h3>按真实结果逐项核对</h3></div><span>{checked.length} / {lab.successCriteria.length}</span></div>
+        <div className="verification-checklist">
+          {lab.successCriteria.map((criterion) => {
+            const isChecked = checked.includes(criterion);
+            return <button key={criterion} className={isChecked ? "is-checked" : ""} aria-pressed={isChecked} onClick={() => toggleCriterion(criterion)} disabled={verified}><span>{isChecked ? <Check size={13} /> : null}</span>{criterion}</button>;
+          })}
+        </div>
+        <div className="evidence-grid">
+          <div><strong>应保存的证据</strong><p>{lab.evidence}</p></div>
+          <div><strong>失败后的恢复动作</strong><p>{lab.recovery}</p></div>
+        </div>
+        <div className="lab-verify-actions">
+          <p>{verified ? <><CheckCircle2 size={15} />实验结果已记录，本课还需通过课后检查才计入掌握度。</> : "只有在真实环境取得上述证据后，才确认实验通过。"}</p>
+          <button className="primary-button" onClick={onVerify} disabled={!allChecked || verified}><ClipboardCheck size={15} />{verified ? "已验收" : "确认结果已核验"}</button>
+        </div>
       </div>
       <p className="lab-safety"><ShieldCheck size={15} />本平台只模拟关键决策；真实命令请在隔离练习环境中执行。</p>
     </section>
@@ -609,16 +641,18 @@ function PracticePanel({ lesson, isCompleted, onComplete }) {
 }
 
 function LessonReferences({ lesson }) {
+  const supplementary = learningResources.filter((resource) => resource.lessonIds.includes(lesson.id) && resource.authority !== "官方");
   return (
     <section className="lesson-resources">
       <div><strong>本课结论</strong><span>{lesson.takeaways.join(" · ")}</span></div>
       <div><strong>常见问题</strong><span>{lesson.troubleshooting}</span></div>
       <div className="reference-links"><strong>官方资料</strong><span>{lesson.references.map((ref) => <a key={ref.url} href={ref.url} target="_blank" rel="noreferrer">{ref.label}<ExternalLink size={12} /></a>)}</span></div>
+      {supplementary.length ? <div className="reference-links"><strong>延伸阅读</strong><span>{supplementary.map((resource) => <a key={resource.id} href={resource.url} target="_blank" rel="noreferrer">{resource.title}<ExternalLink size={12} /></a>)}</span></div> : null}
     </section>
   );
 }
 
-function CourseView({ lesson, lessonIndex, completed, diagnostic, onDiagnose, onComplete, onNavigate }) {
+function CourseView({ lesson, lessonIndex, completed, labVerified, diagnostic, onDiagnose, onComplete, onVerify, onNavigate }) {
   const [stepIndex, setStepIndex] = useState(0);
   return (
     <div className="course-view">
@@ -650,7 +684,7 @@ function CourseView({ lesson, lessonIndex, completed, diagnostic, onDiagnose, on
         </div>
       </section>
 
-      <LabBrief lab={lesson.lab} />
+      <LabBrief lab={lesson.lab} verified={labVerified} onVerify={() => onVerify(lesson.id)} />
       <PracticePanel key={lesson.id} lesson={lesson} isCompleted={completed.includes(lesson.id)} onComplete={() => onComplete(lesson.id)} />
       <LessonReferences lesson={lesson} />
 
@@ -663,29 +697,33 @@ function CourseView({ lesson, lessonIndex, completed, diagnostic, onDiagnose, on
   );
 }
 
-function ProgressRail({ lesson, completed, diagnostics, onReset }) {
-  const value = Math.round((completed.length / lessons.length) * 100);
+function ProgressRail({ lesson, completed, verifiedLabs, diagnostics, onReset }) {
+  const value = Math.round(((completed.length + verifiedLabs.length) / (lessons.length * 2)) * 100);
   const completedCurrent = completed.includes(lesson.id);
+  const labVerified = verifiedLabs.includes(lesson.id);
+  const mastered = lessons.filter((item) => completed.includes(item.id) && verifiedLabs.includes(item.id)).length;
   const diagnosticCount = Object.keys(diagnostics).length;
   return (
     <aside className="progress-rail">
       <span className="section-label">总掌握度</span>
       <ProgressRing value={value} />
-      <div className="level-copy"><strong>{value === 100 ? "Hermes 工程实践者" : value >= 50 ? "工作流构建者" : "基础探索者"}</strong><span>{completed.length} / {lessons.length} 个课后检查已通过</span></div>
+      <div className="level-copy"><strong>{value === 100 ? "Hermes 工程实践者" : value >= 50 ? "工作流构建者" : "基础探索者"}</strong><span>{mastered} / {lessons.length} 门课程已双证据完成</span></div>
       <div className="rail-metric"><ListChecks size={15} /><span>课前诊断</span><strong>{diagnosticCount}/{lessons.length}</strong></div>
+      <div className="rail-metric"><FlaskConical size={15} /><span>实验验收</span><strong>{verifiedLabs.length}/{lessons.length}</strong></div>
+      <div className="rail-metric"><ClipboardCheck size={15} /><span>课后检查</span><strong>{completed.length}/{lessons.length}</strong></div>
 
       <div className="rail-divider" />
       <span className="section-label">本节检查点</span>
       <div className="checkpoint-list">
         {lesson.checkpoints.map((checkpoint, index) => {
-          const done = completedCurrent || (Boolean(diagnostics[lesson.id]) && index === 0);
+          const done = index === 0 ? Boolean(diagnostics[lesson.id]) : index === lesson.checkpoints.length - 1 ? completedCurrent : labVerified;
           return <div key={checkpoint} className={done ? "is-done" : ""}>{done ? <CheckCircle2 size={16} /> : <Circle size={16} />}<span>{checkpoint}</span></div>;
         })}
       </div>
 
       <div className="rail-divider" />
       <span className="section-label">学习反馈</span>
-      <p className="rail-feedback">{completedCurrent ? "课后检查已通过。建议在真实隔离环境完成实验成功标准后再进入下一阶段。" : diagnostics[lesson.id] === "review" ? "课前诊断发现待补操作。完成核心步骤与实验后，用课后检查验证掌握度。" : "先完成课前诊断，再依次学习操作、实验和课后检查。"}</p>
+      <p className="rail-feedback">{completedCurrent && labVerified ? "本课已取得实验与课后检查双证据，可以进入下一课。" : completedCurrent ? "课后检查已通过，还需要在真实隔离环境逐项验收实验结果。" : labVerified ? "实验结果已验收，再通过课后检查即可完成本课。" : diagnostics[lesson.id] === "review" ? "课前诊断发现待补操作。完成核心步骤与实验后，用课后检查验证掌握度。" : "先完成课前诊断，再依次学习操作、实验验收和课后检查。"}</p>
       <button className="reset-button" onClick={onReset}><RefreshCcw size={14} />重置本地进度</button>
     </aside>
   );
@@ -694,6 +732,7 @@ function ProgressRail({ lesson, completed, diagnostics, onReset }) {
 function ResearchView() {
   const [filter, setFilter] = useState("all");
   const shown = repositories.filter((repo) => filter === "all" || (filter === "official" ? repo.role.includes("官方") : !repo.role.includes("官方")));
+  const shownResources = learningResources.filter((resource) => filter === "all" || (filter === "official" ? resource.authority === "官方" : resource.authority !== "官方"));
   return (
     <div className="research-view">
       <section className="research-header">
@@ -704,8 +743,20 @@ function ResearchView() {
         <div className="filter-tabs" role="tablist" aria-label="资源筛选">
           {[{ id: "all", label: "全部" }, { id: "official", label: "官方" }, { id: "community", label: "参考" }].map((item) => <button key={item.id} className={filter === item.id ? "is-active" : ""} onClick={() => setFilter(item.id)}>{item.label}</button>)}
         </div>
-        <span>{shown.length} 个已核验来源</span>
+        <span>{shownResources.length} 份电子资料 · {shown.length} 个研究来源</span>
       </div>
+      <section className="material-library" aria-labelledby="material-library-title">
+        <div className="material-library-heading"><span className="section-label">Electronic Library</span><h2 id="material-library-title">可在线阅读的电子资料</h2><p>只提供原创摘要与原始链接；访问受限或字幕未核验的内容会明确标记。</p></div>
+        <div className="material-list">
+          {shownResources.map((resource) => (
+            <article key={resource.id}>
+              <div><span>{resource.kind} · {resource.language}</span><h3>{resource.title}</h3><p>{resource.summary}</p></div>
+              <div><span className={`access-state ${resource.access.includes("公开") || resource.access.includes("下载") ? "is-open" : ""}`}>{resource.access}</span><a className="icon-button" href={resource.url} target="_blank" rel="noreferrer" aria-label={`在线查看 ${resource.title}`}><ExternalLink size={17} /></a></div>
+            </article>
+          ))}
+        </div>
+      </section>
+      <div className="research-section-title"><span className="section-label">Source Analysis</span><h2>项目与设计来源</h2></div>
       <div className="repo-list">
         {shown.map((repo) => (
           <article className="repo-card" key={repo.name}>
@@ -737,8 +788,8 @@ function ArchitectureView() {
         <h2>技术架构与边界</h2>
         <div className="architecture-table">
           <div><strong>内容</strong><span>13 课 / 4 阶段；安装命令和时效性配置均链接当前官方资料</span></div>
-          <div><strong>交互</strong><span>课前诊断 + 四步讲解 + 实验说明 + 课后检查 + 即时反馈</span></div>
-          <div><strong>状态</strong><span>localStorage v2；兼容迁移原 v1 完成记录</span></div>
+          <div><strong>交互</strong><span>课前诊断 + 四步操作 + 真实实验 + 结果清单 + 恢复动作 + 课后检查</span></div>
+          <div><strong>状态</strong><span>localStorage v3；保存诊断、实验验收、课后检查和最近位置，兼容迁移 v1/v2</span></div>
           <div><strong>安全</strong><span>命令均为模拟展示；不访问 Shell、~/.hermes、凭据或外部消息平台</span></div>
           <div><strong>响应式</strong><span>桌面三栏、平板双栏、手机课程抽屉；保持同一学习顺序</span></div>
           <div><strong>扩展</strong><span>后续可接入真实隔离实验 runner、账号同步、教师看板与版本化内容更新</span></div>
@@ -752,6 +803,7 @@ export default function App() {
   const [initial] = useState(() => readProgress());
   const [activeLesson, setActiveLesson] = useState(Math.min(initial.activeLesson, lessons.length - 1));
   const [completed, setCompleted] = useState(initial.completed.filter((id) => lessons.some((lesson) => lesson.id === id)));
+  const [verifiedLabs, setVerifiedLabs] = useState((initial.verifiedLabs || []).filter((id) => lessons.some((lesson) => lesson.id === id)));
   const [diagnostics, setDiagnostics] = useState(initial.diagnostics || {});
   const [view, setView] = useState("course");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -759,8 +811,8 @@ export default function App() {
   const phase = phases.find((item) => item.id === lesson.phaseId);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 2, completed, activeLesson, diagnostics }));
-  }, [completed, activeLesson, diagnostics]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ version: 3, completed, verifiedLabs, activeLesson, diagnostics }));
+  }, [completed, verifiedLabs, activeLesson, diagnostics]);
 
   const navigateLesson = (index) => {
     if (index < 0 || index >= lessons.length) return;
@@ -772,24 +824,26 @@ export default function App() {
   const resetProgress = () => {
     if (!window.confirm("确定清除这个浏览器中的课程进度和诊断记录吗？")) return;
     setCompleted([]);
+    setVerifiedLabs([]);
     setDiagnostics({});
     setActiveLesson(0);
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(PREVIOUS_STORAGE_KEY);
     localStorage.removeItem(LEGACY_STORAGE_KEY);
   };
 
   return (
     <div className="app-shell">
-      <CourseSidebar activeIndex={activeLesson} completed={completed} onSelect={navigateLesson} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <CourseSidebar activeIndex={activeLesson} completed={completed} verifiedLabs={verifiedLabs} onSelect={navigateLesson} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="main-shell">
         <AppTopbar view={view} setView={setView} lesson={lesson} phase={phase} onOpenMenu={() => setSidebarOpen(true)} />
         <div className="main-scroll">
-          {view === "course" ? <CourseView key={lesson.id} lesson={lesson} lessonIndex={activeLesson} completed={completed} diagnostic={diagnostics[lesson.id]} onDiagnose={(id, passed) => setDiagnostics((current) => ({ ...current, [id]: passed ? "correct" : "review" }))} onComplete={(id) => setCompleted((current) => current.includes(id) ? current : [...current, id])} onNavigate={navigateLesson} /> : null}
+          {view === "course" ? <CourseView key={lesson.id} lesson={lesson} lessonIndex={activeLesson} completed={completed} labVerified={verifiedLabs.includes(lesson.id)} diagnostic={diagnostics[lesson.id]} onDiagnose={(id, passed) => setDiagnostics((current) => ({ ...current, [id]: passed ? "correct" : "review" }))} onComplete={(id) => setCompleted((current) => current.includes(id) ? current : [...current, id])} onVerify={(id) => setVerifiedLabs((current) => current.includes(id) ? current : [...current, id])} onNavigate={navigateLesson} /> : null}
           {view === "research" ? <ResearchView /> : null}
           {view === "architecture" ? <ArchitectureView /> : null}
         </div>
       </main>
-      {view === "course" ? <ProgressRail lesson={lesson} completed={completed} diagnostics={diagnostics} onReset={resetProgress} /> : null}
+      {view === "course" ? <ProgressRail lesson={lesson} completed={completed} verifiedLabs={verifiedLabs} diagnostics={diagnostics} onReset={resetProgress} /> : null}
     </div>
   );
 }
