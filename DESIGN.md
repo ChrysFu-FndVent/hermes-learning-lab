@@ -30,7 +30,7 @@
 | `InstallGuide` | 桌面、macOS、Windows、WSL2 与飞书的分路径引导 | `activeId` |
 | `InteractionPractice` | Desktop 与 Feishu 的安全交互模拟 | `surface`, `stage` |
 | `RealInterfaceGuide` | 官方 Desktop 实景标注、飞书双路径 UI 指南与真实操作步骤 | `surface`, `activeId` |
-| `LocalOperationVerifier` | 显式本机只读检测与浏览器内回执判定 | `probeState`, `receiptState` |
+| `LocalOperationVerifier` | 本机伴随服务配对、显式只读检测与浏览器内回执判定 | `serviceState`, `receiptState` |
 | `CourseSidebar` | 阶段化目录和完成状态 | `activeLesson`, `completed` |
 | `PreQuiz` | 课前诊断与即时解释 | `diagnostics` |
 | `CourseView` | 四步讲解、轨迹、资源和导航 | `stepIndex` |
@@ -61,15 +61,15 @@ flowchart LR
     D --> E[localStorage v2]
     C --> F[实验手册与资料视图]
     C --> G[用户主动回执]
-    C --> H[Vite 本地只读状态探针]
+    C --> H[127.0.0.1 本机伴随服务]
 ```
 
 - React + Vite；当前规模使用局部状态，无需额外状态库。
 - Lucide React 提供一致图标。
 - `hermes-learning-lab-progress-v2` 保存课程 ID、诊断结果和最近位置。
 - 读取不到 v2 时迁移 `hermes-learning-lab-progress-v1` 的完成数据。
-- 教学命令仍是字符串；唯一命令执行面是用户点击后触发的本地只读探针。
-- 探针仅检查 Hermes 命令是否存在、Desktop 进程和 `gateway status`，响应只包含布尔值与检测时间。
+- 教学命令仍是字符串；网页不会执行命令，检测通过用户主动启动的本机伴随服务完成。
+- 伴随服务仅检查 Hermes 命令是否存在、Desktop 进程、`gateway status` 和 `doctor`，响应只包含白名单字段。
 - 不读取配置、密钥、会话、日志或消息；不启动/停止 Desktop 或 Gateway。
 
 ## 视觉与响应式

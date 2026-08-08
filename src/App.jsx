@@ -36,12 +36,12 @@ import {
   Wifi,
   X,
 } from "lucide-react";
-import { architectureLayers, learningResources, lessons, onboardingTracks, phases, repositories, surfaceGuides } from "./data";
+import { architectureLayers, courseMetadata, learningResources, lessons, onboardingTracks, phases, repositories, surfaceGuides } from "./data";
+import { checkCompanion, companionServiceUrl, discoverCompanion, hasCompanionToken, pairCompanion, revokeCompanion } from "./localCompanion";
 
 const STORAGE_KEY = "hermes-learning-lab-progress-v3";
 const PREVIOUS_STORAGE_KEY = "hermes-learning-lab-progress-v2";
 const LEGACY_STORAGE_KEY = "hermes-learning-lab-progress-v1";
-
 function readProgress() {
   try {
     const current = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -356,22 +356,49 @@ function FeishuInterfaceReference({ guide }) {
 }
 
 function LocalOperationVerifier({ surface, guide }) {
-  const [probeState, setProbeState] = useState("idle");
+  const [serviceState, setServiceState] = useState("checking");
+  const [pairingCode, setPairingCode] = useState("");
   const [probe, setProbe] = useState(null);
   const [receipt, setReceipt] = useState("");
   const [receiptState, setReceiptState] = useState("idle");
 
-  const runProbe = async () => {
-    setProbeState("running");
+  useEffect(() => {
+    let active = true;
+    discoverCompanion()
+      .then(() => { if (active) setServiceState(hasCompanionToken() ? "paired" : "unpaired"); })
+      .catch(() => { if (active) setServiceState("offline"); });
+    return () => { active = false; };
+  }, []);
+
+  const pair = async () => {
+    if (!pairingCode.trim()) return;
+    setServiceState("pairing");
     try {
-      const response = await fetch("/api/local-verification", { cache: "no-store" });
-      if (!response.ok) throw new Error("probe unavailable");
-      const result = await response.json();
-      setProbe(result);
-      setProbeState("done");
-    } catch {
+      await pairCompanion(pairingCode);
+      setPairingCode("");
+      setServiceState("paired");
+    } catch (error) {
+      setServiceState(error.code === "invalid_pairing_code" ? "invalid-code" : "offline");
+    }
+  };
+
+  const runProbe = async () => {
+    setServiceState("checking");
+    try {
+      setProbe(await checkCompanion());
+      setServiceState("done");
+    } catch (error) {
       setProbe(null);
-      setProbeState("unavailable");
+      setServiceState(error.code === "confirmation_denied" ? "denied" : error.code === "confirmation_timeout" ? "timeout" : error.code === "pairing_required" ? "unpaired" : "offline");
+    }
+  };
+
+  const revoke = async () => {
+    try { await revokeCompanion(); } catch {
+      // Clear the browser token even if the service has already stopped.
+    } finally {
+      setProbe(null);
+      setServiceState("unpaired");
     }
   };
 
@@ -389,12 +416,19 @@ function LocalOperationVerifier({ surface, guide }) {
     <div className="real-verifier">
       <div className="probe-panel">
         <div className="verifier-heading"><ScanLine size={17} /><div><strong>本机只读检测</strong><span>仅在点击时检查命令、Desktop 进程和 Gateway 状态</span></div></div>
-        <button className="secondary-action" onClick={runProbe} disabled={probeState === "running"}>{probeState === "running" ? "检测中…" : "检测本机状态"}</button>
-        {probeState === "idle" ? <p className="probe-note">不会读取配置文件、密钥、会话或飞书消息。</p> : null}
-        {probeState === "unavailable" ? <p className="probe-feedback is-error"><AlertTriangle size={14} />当前运行模式未提供本地检测，可继续使用右侧回执验收。</p> : null}
-        {probeState === "done" ? (
+        {serviceState === "checking" ? <p className="probe-note">正在寻找本机伴随服务…</p> : null}
+        {serviceState === "offline" ? <div className="static-mode-note"><ShieldCheck size={15} /><span><strong>本机伴随服务未连接</strong>在线课程仍可继续；启动本机服务后，页面才能读取脱敏状态。<a href={`${import.meta.env.BASE_URL}downloads/start-hermes-lab.command`} download>下载 macOS 启动脚本</a> · <a href={`${import.meta.env.BASE_URL}downloads/start-hermes-lab.ps1`} download>下载 Windows 启动脚本</a><small>也可在项目目录运行 <code>npm run local:bridge</code>。</small></span></div> : null}
+        {serviceState === "unpaired" || serviceState === "invalid-code" ? <div className="pairing-box"><p><strong>先配对这台浏览器</strong>从本机伴随服务终端复制一次性配对码；配对关系会持续到你手动解除。</p><div className="pairing-input-row"><input aria-label="本机伴随服务配对码" value={pairingCode} onChange={(event) => setPairingCode(event.target.value)} placeholder="例如 ABCD-2345" /><button className="secondary-action" onClick={pair} disabled={!pairingCode.trim()}>配对</button></div>{serviceState === "invalid-code" ? <span className="probe-feedback is-error"><AlertTriangle size={14} />配对码无效或已轮换，请从终端复制最新配对码。</span> : null}</div> : null}
+        {serviceState === "pairing" ? <p className="probe-note">正在配对本机伴随服务…</p> : null}
+        {serviceState === "paired" ? <div className="paired-actions"><button className="secondary-action" onClick={runProbe}>检测本机状态</button><button className="text-button" onClick={revoke}>解除配对</button><p className="probe-note">服务地址：{companionServiceUrl}。每次检测前都需要在本机终端确认。</p></div> : null}
+        {serviceState === "checking" && hasCompanionToken() ? <p className="probe-note">等待本机终端确认本次读取…</p> : null}
+        {serviceState === "denied" ? <p className="probe-feedback is-error"><AlertTriangle size={14} />本次检测被终端拒绝；允许后重新点击“检测本机状态”。</p> : null}
+        {serviceState === "timeout" ? <p className="probe-feedback is-error"><AlertTriangle size={14} />等待终端确认超时；请保持伴随服务运行后重试。</p> : null}
+        {serviceState === "offline" ? <p className="probe-note">不会读取配置文件、密钥、会话或飞书消息。</p> : null}
+        {serviceState === "done" ? (
           <div className="probe-results">
             {probeItems.map((item) => <div key={item.label} className={item.value ? "is-success" : ""}>{item.value ? <CheckCircle2 size={15} /> : <Circle size={15} />}<span><strong>{item.label}</strong><small>{item.detail}</small></span></div>)}
+            <div><Circle size={15} /><span><strong>版本 / Doctor</strong><small>{probe.hermesVersion} · {probe.doctor?.summary}</small></span></div>
           </div>
         ) : null}
       </div>
@@ -736,8 +770,8 @@ function ResearchView() {
   return (
     <div className="research-view">
       <section className="research-header">
-        <img src="/hermes-banner.png" alt="Hermes Agent 官方项目横幅" />
-        <div><h1>Hermes 技术与教学资料</h1><p>以 Hermes 官方文档和模型卡为事实主线，使用 AI-For-Beginners 的 Setup、诊断、实验和复习结构组织课程。核验日期：2026-08-02。</p></div>
+        <img src={`${import.meta.env.BASE_URL}hermes-banner.png`} alt="Hermes Agent 官方项目横幅" />
+        <div><h1>Hermes 技术与教学资料</h1><p>以 Hermes 官方文档和模型卡为事实主线，使用 AI-For-Beginners 的 Setup、诊断、实验和复习结构组织课程。最后核验：Hermes Agent {courseMetadata.hermesVersion}（{courseMetadata.hermesReleaseTag}）· {courseMetadata.verifiedOn}。</p><a className="release-link" href={courseMetadata.releaseUrl} target="_blank" rel="noreferrer">查看核验版本<ExternalLink size={13} /></a></div>
       </section>
       <div className="research-toolbar">
         <div className="filter-tabs" role="tablist" aria-label="资源筛选">
@@ -746,12 +780,12 @@ function ResearchView() {
         <span>{shownResources.length} 份电子资料 · {shown.length} 个研究来源</span>
       </div>
       <section className="material-library" aria-labelledby="material-library-title">
-        <div className="material-library-heading"><span className="section-label">Electronic Library</span><h2 id="material-library-title">可在线阅读的电子资料</h2><p>只提供原创摘要与原始链接；访问受限或字幕未核验的内容会明确标记。</p></div>
+        <div className="material-library-heading"><span className="section-label">Electronic Library</span><h2 id="material-library-title">可在线阅读的电子资料</h2><p>只提供原创摘要与公开入口；命令、配置与权限以官方资料为准。</p></div>
         <div className="material-list">
           {shownResources.map((resource) => (
             <article key={resource.id}>
               <div><span>{resource.kind} · {resource.language}</span><h3>{resource.title}</h3><p>{resource.summary}</p></div>
-              <div><span className={`access-state ${resource.access.includes("公开") || resource.access.includes("下载") ? "is-open" : ""}`}>{resource.access}</span><a className="icon-button" href={resource.url} target="_blank" rel="noreferrer" aria-label={`在线查看 ${resource.title}`}><ExternalLink size={17} /></a></div>
+              <div><span className={`access-state ${["公开", "下载", "直接观看"].some((label) => resource.access.includes(label)) ? "is-open" : ""}`}>{resource.access}</span><a className="icon-button" href={resource.url} target="_blank" rel="noreferrer" aria-label={`在线查看 ${resource.title}`}><ExternalLink size={17} /></a></div>
             </article>
           ))}
         </div>
@@ -821,6 +855,11 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const selectView = (nextView) => {
+    setView(nextView);
+    window.scrollTo({ top: 0, behavior: "auto" });
+  };
+
   const resetProgress = () => {
     if (!window.confirm("确定清除这个浏览器中的课程进度和诊断记录吗？")) return;
     setCompleted([]);
@@ -836,7 +875,7 @@ export default function App() {
     <div className="app-shell">
       <CourseSidebar activeIndex={activeLesson} completed={completed} verifiedLabs={verifiedLabs} onSelect={navigateLesson} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="main-shell">
-        <AppTopbar view={view} setView={setView} lesson={lesson} phase={phase} onOpenMenu={() => setSidebarOpen(true)} />
+        <AppTopbar view={view} setView={selectView} lesson={lesson} phase={phase} onOpenMenu={() => setSidebarOpen(true)} />
         <div className="main-scroll">
           {view === "course" ? <CourseView key={lesson.id} lesson={lesson} lessonIndex={activeLesson} completed={completed} labVerified={verifiedLabs.includes(lesson.id)} diagnostic={diagnostics[lesson.id]} onDiagnose={(id, passed) => setDiagnostics((current) => ({ ...current, [id]: passed ? "correct" : "review" }))} onComplete={(id) => setCompleted((current) => current.includes(id) ? current : [...current, id])} onVerify={(id) => setVerifiedLabs((current) => current.includes(id) ? current : [...current, id])} onNavigate={navigateLesson} /> : null}
           {view === "research" ? <ResearchView /> : null}

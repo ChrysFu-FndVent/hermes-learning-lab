@@ -23,9 +23,4 @@
 | [Hermes Agent 新手教程](https://www.youtube.com/watch?v=dUzz83PvLeY) | VPS、Telegram、Skills、任务安排 | 云端常驻工作流 |
 | [一人公司与 Hermes Agent](https://www.youtube.com/watch?v=iLWw9jRFon8) | VPS、Setup、Telegram、记忆与自我迭代 | 个人自动化场景；注意商业推广内容 |
 
-这些视频已核验搜索元数据，但当前环境不能稳定取得字幕。因此项目不声称逐字阅读，也不引用视频中的未复核命令。
-
-## 访问受限或失效
-
-- [知乎：Hermes Agent 完整指南](https://zhuanlan.zhihu.com/p/2027128115831260939)：无登录抓取返回 HTTP 403；只保留人工浏览入口。
-- [飞书：Hermes Agent 新手使用十大技巧](https://my.feishu.cn/wiki/IQN1wMxixivvaKkqELlc1lmrnec?from=from_copylink)：核验时返回 HTTP 404，不作为当前课程事实来源。
+这些视频保留为直接观看入口，主题来自公开标题、简介与章节元数据。项目不把社区视频中的命令直接当作课程事实；学习者执行前应使用官方文档复核安装命令、配置键、权限和安全边界。需要登录、已失效或无法公开验证的来源不进入本索引。
