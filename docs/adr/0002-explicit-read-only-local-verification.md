@@ -1,6 +1,6 @@
 # 0002. Explicit read-only local verification
 
-- **Status**: accepted
+- **Status**: superseded by [ADR 0003](./0003-local-companion-bridge.md)
 - **Date**: 2026-08-02
 - **Deciders**: Codex, user
 
@@ -10,7 +10,7 @@ Browser simulation teaches the correct decisions but cannot show whether the lea
 
 ## Decision
 
-The local Vite server exposes `/api/local-verification`. It runs only after the learner clicks **检测本机状态** and returns:
+The original implementation exposed `/api/local-verification` from the local Vite development server. It ran only after the learner clicked **检测本机状态** and returned:
 
 - whether `hermes` is discoverable on `PATH`;
 - whether a Hermes Desktop process is present;
@@ -19,10 +19,12 @@ The local Vite server exposes `/api/local-verification`. It runs only after the 
 
 The endpoint returns booleans only. It does not return command output, paths, configuration, logs, credentials, sessions, or message content. It never starts, stops, or changes Hermes. Real message-path verification uses an explicit learner-submitted `DESKTOP_OK` or `FEISHU_OK` receipt evaluated in the browser.
 
+This middleware approach is superseded because GitHub Pages cannot provide the endpoint. The current bridge is documented in [ADR 0003](./0003-local-companion-bridge.md); static builds keep receipt verification and show the companion download instructions.
+
 ## Consequences
 
 - Positive: learners receive real-environment feedback while preserving a narrow, explainable boundary.
-- Positive: hosted/static builds degrade safely to receipt verification when the local endpoint is unavailable.
+- Positive: hosted/static builds explicitly disable probing instead of discovering the missing endpoint after a failed request.
 - Negative: process-name and CLI-output changes can cause a false negative.
 - Neutral: the learner must explicitly initiate each probe; no background polling is used.
 

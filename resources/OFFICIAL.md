@@ -1,5 +1,7 @@
 # Hermes 官方资料与命令核验
 
+最后核验：2026-08-04 · [Hermes Agent v0.20.0（`v2026.8.3`）](https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3)
+
 ## 入门与界面
 
 | 目标 | 官方入口 |
@@ -31,7 +33,7 @@
 |---|---|
 | 审批、配对与隔离 | [Security](https://hermes-agent.nousresearch.com/docs/user-guide/security) |
 | Checkpoint 与回滚 | [Checkpoints and rollback](https://hermes-agent.nousresearch.com/docs/user-guide/checkpoints-and-rollback) |
-| 当前实现与 Release | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) |
+| 当前实现与 Release | [v0.20.0 / `v2026.8.3`](https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3) · [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) |
 
 ## 最小操作基线
 

@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 学习打卡与一般交流
+    url: https://github.com/ChrysFu-FndVent/hermes-learning-lab/discussions/categories/general
+    about: 分享学习进度和课程体验。
+  - name: 环境排错
+    url: https://github.com/ChrysFu-FndVent/hermes-learning-lab/discussions/categories/q-a
+    about: 提供脱敏环境信息并向社区提问。
+  - name: 课程纠错与建议
+    url: https://github.com/ChrysFu-FndVent/hermes-learning-lab/discussions/categories/ideas
+    about: 报告过期命令、断链或教学设计问题。
+  - name: 毕业项目展示
+    url: https://github.com/ChrysFu-FndVent/hermes-learning-lab/discussions/categories/show-and-tell
+    about: 展示项目、验收证据和恢复方案。

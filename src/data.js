@@ -5,6 +5,13 @@ export const phases = [
   { id: "production", number: "IV", title: "工程化与进阶", level: "Advanced" },
 ];
 
+export const courseMetadata = {
+  hermesVersion: "v0.20.0",
+  hermesReleaseTag: "v2026.8.3",
+  verifiedOn: "2026-08-08",
+  releaseUrl: "https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3",
+};
+
 const option = (id, label, detail) => ({ id, label, detail });
 
 export const onboardingTracks = [
@@ -86,7 +93,7 @@ export const surfaceGuides = {
     label: "Hermes Desktop",
     title: "从课程界面切换到真实 Desktop",
     summary: "先认识真实窗口中的稳定地标，再在同一个 Agent 运行时里完成新会话、模型确认、消息发送与工具审批。",
-    image: "/ui-reference/hermes-desktop-official.png",
+    image: `${import.meta.env.BASE_URL}ui-reference/hermes-desktop-official.png`,
     imageAlt: "NousResearch 官方 Hermes Desktop 界面，左侧为导航和会话，中间为聊天区，底部为输入框与状态栏",
     sourceLabel: "官方仓库界面实景",
     sourceUrl: "https://github.com/NousResearch/hermes-agent/blob/main/apps/desktop/pr-assets/session-source-folders.png",
@@ -417,10 +424,9 @@ export const learningResources = [
   { id: "orange-book", title: "Hermes Agent 橙皮书 2.0", kind: "PDF 电子书", language: "中文", authority: "社区", access: "在线预览 / 下载", url: "https://github.com/alchaincyf/hermes-agent-orange-book/blob/main/Hermes-Agent%E6%A9%99%E7%9A%AE%E4%B9%A62.0-v260607.pdf", summary: "用中文串联 Desktop、浏览器管理、记忆、Skills、多 Agent、消息平台与安全；具体命令需回查官方资料。", lessonIds: ["installation-channels", "memory", "skills", "automation", "delegation", "security"] },
   { id: "awesome", title: "awesome-hermes-agent", kind: "资源目录", language: "英文", authority: "社区", access: "全文公开", url: "https://github.com/0xNyk/awesome-hermes-agent", summary: "按 Surfaces、Skills、Plugins、Memory Providers、Tools 与 Guides 寻找进阶材料。", lessonIds: ["skills", "automation", "delegation", "capstone"] },
   { id: "zh-course", title: "hermes-agent-zh", kind: "GitHub 教程", language: "中文", authority: "社区", access: "全文公开", url: "https://github.com/dongsheng123132/hermes-agent-zh", summary: "覆盖 macOS、Windows、云端部署、Provider、Ollama、Cron、MCP、IM 接入、案例与 FAQ。", lessonIds: ["installation-channels", "setup-doctor", "model-switching", "skills", "automation", "backup-restore"] },
-  { id: "papaya-video", title: "Hermes Agent 保姆级教学", kind: "YouTube 视频", language: "中文", authority: "社区", access: "视频公开 / 字幕未核验", url: "https://www.youtube.com/watch?v=-EivK7vpOXY", summary: "演示本机/云端安装、Telegram、Memory、OpenRouter、搜索、Subagent、Cron、Skills、Notion、备份与防火墙。", lessonIds: ["installation-channels", "memory", "skills", "automation", "delegation", "backup-restore"] },
-  { id: "tips-video", title: "Hermes Agent 新手使用十大技巧", kind: "YouTube 视频", language: "中文", authority: "社区", access: "视频公开 / 字幕未核验", url: "https://www.youtube.com/watch?v=hLiN_X7dzdw", summary: "章节元数据覆盖模型、SOUL、Memory、聊天通道、Doctor、UI、迁移与 Skills。", lessonIds: ["setup-doctor", "model-switching", "memory", "skills", "backup-restore"] },
-  { id: "desktop-video", title: "Hermes Agent 桌面版正式发布", kind: "YouTube 视频", language: "中文", authority: "社区", access: "视频公开 / 字幕未核验", url: "https://www.youtube.com/watch?v=FdSVeOAd480", summary: "适合观察 Windows、macOS、Linux 桌面版的真实界面与首次操作。", lessonIds: ["installation-channels"] },
-  { id: "zhihu-guide", title: "Hermes Agent 完整指南：从安装到进阶玩法", kind: "知乎文章", language: "中文", authority: "社区", access: "浏览器可能可读 / 抓取 403", url: "https://zhuanlan.zhihu.com/p/2027128115831260939", summary: "仅保留人工复核入口；在未取得正文前不引用其中的具体参数与命令。", lessonIds: [] },
+  { id: "papaya-video", title: "Hermes Agent 保姆级教学", kind: "YouTube 视频", language: "中文", authority: "社区", access: "YouTube 直接观看", url: "https://www.youtube.com/watch?v=-EivK7vpOXY", summary: "演示本机/云端安装、Telegram、Memory、OpenRouter、搜索、Subagent、Cron、Skills、Notion、备份与防火墙。", lessonIds: ["installation-channels", "memory", "skills", "automation", "delegation", "backup-restore"] },
+  { id: "tips-video", title: "Hermes Agent 新手使用十大技巧", kind: "YouTube 视频", language: "中文", authority: "社区", access: "YouTube 直接观看", url: "https://www.youtube.com/watch?v=hLiN_X7dzdw", summary: "公开章节元数据覆盖模型、SOUL、Memory、聊天通道、Doctor、UI、迁移与 Skills。", lessonIds: ["setup-doctor", "model-switching", "memory", "skills", "backup-restore"] },
+  { id: "desktop-video", title: "Hermes Agent 桌面版正式发布", kind: "YouTube 视频", language: "中文", authority: "社区", access: "YouTube 直接观看", url: "https://www.youtube.com/watch?v=FdSVeOAd480", summary: "适合观察 Windows、macOS、Linux 桌面版的真实界面与首次操作。", lessonIds: ["installation-channels"] },
 ];
 
 export const architectureLayers = [

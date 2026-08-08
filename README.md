@@ -5,9 +5,9 @@
   <img src="assets/readme/hermes-learning-lab-banner.svg" alt="hermes-learning-lab project banner" width="100%" />
 </p>
 <p align="center">
-  <a href="https://github.com/ChrysFu-FndVent/hermes-learning-lab/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ChrysFu-FndVent/hermes-learning-lab?style=for-the-badge&amp;logo=github" /></a>
-  <a href="https://github.com/ChrysFu-FndVent/hermes-learning-lab/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/ChrysFu-FndVent/hermes-learning-lab?style=for-the-badge" /></a>
-  <a href="https://github.com/ChrysFu-FndVent/hermes-learning-lab/search?l=CSS"><img alt="Top language" src="https://img.shields.io/github/languages/top/ChrysFu-FndVent/hermes-learning-lab?style=for-the-badge" /></a>
+  <a href="https://github.com/ChrysFu/hermes-learning-lab/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ChrysFu/hermes-learning-lab?style=for-the-badge&amp;logo=github" /></a>
+  <a href="https://github.com/ChrysFu/hermes-learning-lab/commits/main"><img alt="Last commit" src="https://img.shields.io/github/last-commit/ChrysFu/hermes-learning-lab?style=for-the-badge" /></a>
+  <a href="https://github.com/ChrysFu/hermes-learning-lab/search?l=JavaScript"><img alt="Top language" src="https://img.shields.io/github/languages/top/ChrysFu/hermes-learning-lab?style=for-the-badge" /></a>
 </p>
 <!-- README-ARCHITECT: visual-shell end -->
 
@@ -21,8 +21,10 @@
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-ES2023-F7DF1E?style=for-the-badge&logo=javascript&logoColor=0b0b0a)](./src/)
 [![Lessons](https://img.shields.io/badge/Lessons-13-e7a83e?style=for-the-badge)](./CURRICULUM.md)
+[![CI](https://img.shields.io/github/actions/workflow/status/ChrysFu/hermes-learning-lab/ci-pages.yml?branch=main&style=for-the-badge&label=CI)](https://github.com/ChrysFu/hermes-learning-lab/actions/workflows/ci-pages.yml)
+[![License](https://img.shields.io/badge/license-MIT%20%2B%20CC%20BY--NC--SA%204.0-70b58a?style=for-the-badge)](./LICENSE)
 
-[课程大纲](./CURRICULUM.md) · [实验手册](./docs/labs/README.md) · [电子资料库](./resources/README.md) · [排错指南](./docs/TROUBLESHOOTING.md)
+[立即开始第一课](https://chrysfu.github.io/hermes-learning-lab/?utm_source=github&utm_medium=readme&utm_campaign=first_lesson) · [课程大纲](./CURRICULUM.md) · [实验手册](./docs/labs/README.md) · [电子资料库](./resources/README.md) · [排错指南](./docs/TROUBLESHOOTING.md)
 
 </div>
 
@@ -46,6 +48,7 @@
 - [Architecture](#architecture)
 - [Project Structure](#project-structure)
 - [Checks and Safety](#checks-and-safety)
+- [Community and Contributing](#community-and-contributing)
 - [Sources and License](#sources-and-license)
 
 </details>
@@ -53,6 +56,8 @@
 ## Overview
 
 Hermes Learning Lab is a Chinese interactive curriculum for learners new to Hermes Agent. It starts with the real Desktop and Feishu surfaces, then progresses through CLI usage, model switching, prompt contracts, Memory, Skills, automation, delegation, isolation, and recovery.
+
+The course was last verified on **2026-08-08** against [Hermes Agent v0.20.0 (`v2026.8.3`)](https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3).
 
 The course adapts the structure of [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners): environment setup and diagnostics come first, followed by self-contained labs with explicit inputs, expected results, post-checks, and further reading. Hermes commands and configuration facts are grounded in the [official documentation](https://hermes-agent.nousresearch.com/docs/) and [official repository](https://github.com/NousResearch/hermes-agent).
 
@@ -100,20 +105,27 @@ See [CURRICULUM.md](./CURRICULUM.md) for prerequisites and mastery criteria, and
 
 ## How to Use
 
-### 1. Start the interactive site
+### 1. Start online
 
-Requirements: Node.js 18+ and npm 9+.
+Open the [GitHub Pages course](https://chrysfu.github.io/hermes-learning-lab/?utm_source=github&utm_medium=readme&utm_campaign=first_lesson) and begin with the Lesson 00 Desktop/Feishu receipt lab. Online mode saves browser progress but never reads Hermes configuration or probes local processes.
+
+> [!NOTE]
+> Before the first deployment, set Pages Source to GitHub Actions as described in [GitHub publishing setup](./docs/GITHUB-SETUP.md).
+
+### 2. Start locally
+
+Requirements: Node.js 22+ and npm 10+.
 
 ```bash
-git clone https://github.com/ChrysFu-FndVent/hermes-learning-lab.git
+git clone https://github.com/ChrysFu/hermes-learning-lab.git
 cd hermes-learning-lab
-npm install
+npm ci
 npm run dev
 ```
 
 Open the URL printed by Vite, normally `http://127.0.0.1:5173/`. If the port is busy, Vite reports the replacement port.
 
-### 2. Complete a lesson
+### 3. Complete a lesson
 
 1. Select a lesson and complete the ungraded pre-check.
 2. Follow the agent trace and four core operational steps.
@@ -123,24 +135,27 @@ Open the URL printed by Vite, normally `http://127.0.0.1:5173/`. If the port is 
 6. Record the lab verification, then pass the post-check.
 7. Continue only after the progress rail confirms both forms of evidence.
 
-### 3. Use the Desktop and Feishu simulations
+### 4. Use the Desktop and Feishu simulations
 
 Lesson 00 includes Desktop and Feishu simulations for sessions, models, mentions, and tool approval. They never connect to a real Hermes runtime. Real verification requires the learner to run the prompt in Desktop or Feishu and explicitly submit a redacted receipt.
 
-### 4. Check local status
+### 5. Check local status
 
 Only an explicit click invokes the local Vite probe. It checks whether the Hermes command exists, whether the Desktop process is running, and whether Gateway reports a usable state. It returns booleans only, never paths, configuration, secrets, logs, sessions, or messages.
 
 > [!IMPORTANT]
-> Static hosting and direct build-file access do not provide the local probe. Simulations, resource links, and browser progress still work.
+> GitHub Pages explicitly shows static learning mode and hides the local-probe button. Simulations, receipt verification, resource links, and browser progress still work.
 
-### 5. Build a local preview
+### 6. Build, test, and preview
 
 ```bash
 npm run lint
 npm run build
+npm run test:e2e
 npm run preview
 ```
+
+Use `npm run build:pages` to verify the Pages base path. CI reruns the same Playwright flows under `/hermes-learning-lab/`.
 
 ## Online Learning Materials
 
@@ -149,6 +164,7 @@ The [resources/](./resources/) folder contains indexes, original summaries, acce
 | Material | Best for | Preview |
 |---|---|---|
 | Hermes Agent documentation | Current setup, Desktop, Feishu, Skills, Memory, Cron, security | [Open docs](https://hermes-agent.nousresearch.com/docs/) |
+| Official Hermes Feishu guide | App permissions, WebSocket, events, approval cards, troubleshooting | [Open Feishu guide](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu) |
 | NousResearch/hermes-agent | Current commands, releases, source, implementation boundaries | [Open repository](https://github.com/NousResearch/hermes-agent) |
 | Hermes Agent Orange Book 2.0 | Chinese overview of UI, memory, multi-agent workflows, and security | [Preview Chinese PDF](https://github.com/alchaincyf/hermes-agent-orange-book/blob/main/Hermes-Agent%E6%A9%99%E7%9A%AE%E4%B9%A62.0-v260607.pdf) |
 | hermes-agent-zh | Chinese setup, providers, automation, messaging, and FAQ | [Open tutorial](https://github.com/dongsheng123132/hermes-agent-zh) |
@@ -159,8 +175,8 @@ The [resources/](./resources/) folder contains indexes, original summaries, acce
 
 Browse the [resource index](./resources/README.md), [official references](./resources/OFFICIAL.md), [community materials](./resources/COMMUNITY.md), and [lesson map](./resources/LESSON-MAP.md).
 
-> [!WARNING]
-> YouTube transcripts were not reliably available. Anonymous retrieval of the Zhihu article returned `403`, and an older Feishu document returned `404`. These sources are not used to validate concrete commands.
+> [!NOTE]
+> Community videos are for observing interfaces and workflows. Installation commands, configuration keys, permissions, and security behavior are verified against the Hermes documentation and current release. The index excludes sources that require sign-in, are unavailable, or cannot be publicly verified.
 
 ## Architecture
 
@@ -172,15 +188,21 @@ The React workspace loads curriculum and resource data from `src/data.js`. Diagn
 
 ```text
 hermes-learning-lab/
+├── .github/                    # CI/Pages and contribution templates
 ├── src/                         # React learning engine, curriculum data, styles
 ├── resources/                   # Electronic material indexes and lesson map
+├── tests/e2e/                   # Desktop, static-mode, and mobile Playwright checks
 ├── docs/labs/README.md          # Real-environment lab guide
 ├── docs/TROUBLESHOOTING.md      # Setup, UI, tooling, and recovery guide
+├── docs/GITHUB-SETUP.md         # Pages, Topics, and Discussions setup
+├── docs/METRICS.md              # Privacy-first measurement plan
 ├── docs/adr/                    # Architecture decisions
 ├── assets/readme/               # README architecture asset and editable source
 ├── public/ui-reference/         # Attributed official UI reference
 ├── CURRICULUM.md                # Curriculum and two-part mastery model
 ├── RESEARCH.md                  # Source research and evidence limits
+├── CONTRIBUTING.md              # Contribution and evidence rules
+├── LICENSE                      # Dual code/content license
 └── preview.png                  # Current product screenshot
 ```
 
@@ -189,6 +211,8 @@ hermes-learning-lab/
 ```bash
 npm run lint
 npm run build
+npm run test:e2e
+npm audit
 ```
 
 - Browser simulations never invoke a shell, modify `~/.hermes`, install extensions, or connect messaging platforms.
@@ -196,17 +220,28 @@ npm run build
 - Real labs should use dedicated directories, isolated Profiles, Sandboxes, and one-time approvals.
 - Receipts and reports must exclude tokens, app secrets, user IDs, chat history, and personal paths.
 - Community commands must be checked against the current official documentation.
+- The Pages build is exercised under `/hermes-learning-lab/` to catch blank deployments and asset 404s.
 
-See [ADR 0001](./docs/adr/0001-browser-simulation-first.md) and [ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md) for the implementation boundaries.
+See [ADR 0001](./docs/adr/0001-browser-simulation-first.md), [ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md), and [ADR 0003](./docs/adr/0003-local-companion-bridge.md) for the implementation boundaries.
+
+## Community and Contributing
+
+- [Learning check-ins](https://github.com/ChrysFu/hermes-learning-lab/discussions/categories/general)
+- [Environment troubleshooting](https://github.com/ChrysFu/hermes-learning-lab/discussions/categories/q-a)
+- [Course corrections](https://github.com/ChrysFu/hermes-learning-lab/discussions/categories/ideas)
+- [Capstone showcases](https://github.com/ChrysFu/hermes-learning-lab/discussions/categories/show-and-tell)
+
+Read [CONTRIBUTING.md](./CONTRIBUTING.md) before submitting changes. See [GitHub setup](./docs/GITHUB-SETUP.md) for Pages, Topics, and Discussion routing, and [course metrics](./docs/METRICS.md) for the privacy boundary.
 
 ## Sources and License
 
 - [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners): setup, lab, quiz, and further-reading structure.
 - [Hermes Agent](https://github.com/NousResearch/hermes-agent): runtime, commands, and UI facts.
+- [Hermes Agent v0.20.0 / `v2026.8.3`](https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3): current verification baseline.
 - [Hermes 4.3 model card](https://huggingface.co/NousResearch/Hermes-4.3-36B): model, prompt, serving, and sampling references.
 - [RESEARCH.md](./RESEARCH.md): research findings, adoption decisions, and version risks.
 
-This repository currently has no `LICENSE` file. Public visibility does not grant permission to copy, modify, or redistribute it by default. Third-party materials remain subject to their source licenses and copyright terms.
+Project code is available under the [MIT License](./LICENSE). Original lessons, labs, research summaries, and project-created diagrams use [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/), which permits attributed non-commercial sharing and translation under the same license. Third-party screenshots, trademarks, model cards, articles, videos, and PDFs are excluded from this grant.
 
 <p align="right"><a href="#readme-top">Back to top</a></p>
 
@@ -226,6 +261,7 @@ This repository currently has no `LICENSE` file. Public visibility does not gran
 - [系统架构](#系统架构)
 - [项目结构](#项目结构)
 - [检查与安全边界](#检查与安全边界)
+- [社区与贡献](#社区与贡献)
 - [资料与许可](#资料与许可)
 
 </details>
@@ -233,6 +269,8 @@ This repository currently has no `LICENSE` file. Public visibility does not gran
 ## 项目简介
 
 Hermes Learning Lab 是一个面向零基础学习者的 Hermes Agent 中文交互课程。课程从 Desktop 和飞书真实界面开始，再逐步进入 CLI、模型切换、Prompt 契约、Memory、Skills、自动化、并行任务、安全隔离与恢复。
+
+课程最后核验于 **2026-08-08**，版本基线为 [Hermes Agent v0.20.0（`v2026.8.3`）](https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3)。
 
 课程结构参考 [microsoft/AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners)：先准备环境和诊断基础，再通过独立实验、明确输入、预期结果、课后检查与延伸资料形成学习闭环。Hermes 的命令和配置事实以[官方文档](https://hermes-agent.nousresearch.com/docs/)及[官方仓库](https://github.com/NousResearch/hermes-agent)为准。
 
@@ -282,20 +320,27 @@ Hermes Learning Lab 是一个面向零基础学习者的 Hermes Agent 中文交�
 
 ## 使用方法
 
-### 1. 启动交互式网站
+### 1. 在线立即开始
 
-环境要求：Node.js 18+、npm 9+。
+打开 [GitHub Pages 课程](https://chrysfu.github.io/hermes-learning-lab/?utm_source=github&utm_medium=readme&utm_campaign=first_lesson)，从第 00 课的 Desktop/飞书回执实验开始。在线模式保存浏览器进度，但不会访问你的 Hermes 配置或探测本机进程。
+
+> [!NOTE]
+> 仓库首次部署前，需要按 [GitHub 发布设置](./docs/GITHUB-SETUP.md) 把 Pages Source 设为 GitHub Actions。
+
+### 2. 本地启动
+
+环境要求：Node.js 22+、npm 10+。
 
 ```bash
-git clone https://github.com/ChrysFu-FndVent/hermes-learning-lab.git
+git clone https://github.com/ChrysFu/hermes-learning-lab.git
 cd hermes-learning-lab
-npm install
+npm ci
 npm run dev
 ```
 
 打开终端显示的地址；默认是 `http://127.0.0.1:5173/`。如果该端口已占用，Vite 会显示实际使用的新端口。
 
-### 2. 完成一门课程
+### 3. 完成一门课程
 
 1. 从左侧选择课程，先完成不计分的课前诊断。
 2. 按顺序查看 Agent 轨迹和四个核心操作步骤。
@@ -305,24 +350,40 @@ npm run dev
 6. 点击“确认结果已核验”，再通过课后检查。
 7. 当右侧显示“本课已取得实验与课后检查双证据”后进入下一课。
 
-### 3. 使用 Desktop 与飞书模拟
+### 4. 使用 Desktop 与飞书模拟
 
 第 00 课包含 Hermes Desktop 和飞书端模拟。模拟练习用于熟悉会话、模型、@提及和工具审批，不会连接真实 Hermes。真实界面验收需要学习者在 Desktop 或飞书中主动执行校验 Prompt，再把脱敏回执粘贴回课程。
 
-### 4. 检测本机状态
+### 5. 连接本机伴随服务
 
-只有点击“检测本机状态”时，本地 Vite 服务才执行最小只读探针：检查 Hermes 命令是否存在、Desktop 进程是否运行，以及 Gateway 是否处于可用状态。接口只返回布尔值，不返回安装路径、配置、密钥、日志、会话或消息。
+GitHub Pages 不能直接读取你的电脑。需要在自己的 macOS 或 Windows 终端启动一个只绑定 `127.0.0.1:43127` 的伴随服务，网页通过一次性配对码连接；每次检测前服务都会在终端询问是否允许。
+
+#### 方式 A：项目目录启动
+
+```bash
+npm ci
+npm run local:bridge
+```
+
+保持终端运行，复制终端显示的配对码，在课程的“本机只读检测”区域输入并点击“配对”。配对后点击“检测本机状态”，回到终端输入 `y` 允许本次读取。服务只返回 Hermes 是否安装、Desktop/Gateway 是否运行、版本和 Doctor 摘要，不返回路径、配置、密钥、日志、会话或消息。
+
+#### 方式 B：下载可审查启动脚本
+
+在课程页面下载 [macOS 启动脚本](./public/downloads/start-hermes-lab.command) 或 [Windows PowerShell 脚本](./public/downloads/start-hermes-lab.ps1)，先阅读源码，再由用户手动执行。脚本不会静默安装 Node.js 或 Hermes；电脑需要 Node.js 22+。服务未连接时，静态课程模拟和 `DESKTOP_OK` / `FEISHU_OK` 回执验收仍可继续。
 
 > [!IMPORTANT]
-> 静态 GitHub Pages 或直接打开构建文件时没有本机探针；课程模拟、资料链接和浏览器进度仍可使用。
+> 不要把配对码、服务状态截图或本机伴随服务目录提交到 Git。完成练习后可点击“解除配对”，或在运行服务的终端按 `Ctrl+C` 停止。
 
-### 5. 构建本地预览
+### 6. 构建、测试与预览
 
 ```bash
 npm run lint
 npm run build
+npm run test:e2e
 npm run preview
 ```
+
+Pages 子路径验证使用 `npm run build:pages`，CI 会在 `/hermes-learning-lab/` 下重复运行同一组 Playwright 流程。
 
 ## 电子资料在线预览
 
@@ -331,6 +392,7 @@ npm run preview
 | 资料 | 适合学习 | 在线预览 |
 |---|---|---|
 | Hermes Agent 官方文档 | 当前安装、Desktop、飞书、Skills、Memory、Cron、安全与排错 | [打开文档](https://hermes-agent.nousresearch.com/docs/) |
+| Hermes 飞书官方接入指南 | 应用权限、WebSocket、事件订阅、审批卡与排错 | [打开飞书指南](https://hermes-agent.nousresearch.com/docs/user-guide/messaging/feishu) |
 | NousResearch/hermes-agent | 当前命令、Release、源码与实现边界 | [打开仓库](https://github.com/NousResearch/hermes-agent) |
 | Hermes Agent 橙皮书 2.0 | 中文整体理解、界面、记忆、多 Agent 与安全 | [预览中文版 PDF](https://github.com/alchaincyf/hermes-agent-orange-book/blob/main/Hermes-Agent%E6%A9%99%E7%9A%AE%E4%B9%A62.0-v260607.pdf) |
 | hermes-agent-zh | 中文安装、Provider、自动化、IM 和 FAQ | [打开教程](https://github.com/dongsheng123132/hermes-agent-zh) |
@@ -346,8 +408,8 @@ npm run preview
 - [社区电子书、文章与视频](./resources/COMMUNITY.md)
 - [课程与资料映射](./resources/LESSON-MAP.md)
 
-> [!WARNING]
-> YouTube 字幕目前未稳定取得；知乎文章的无登录抓取返回 `403`；一个飞书旧文档链接返回 `404`。这些来源不会用于证明具体命令正确。
+> [!NOTE]
+> 社区视频用于观察界面与工作流；安装命令、配置键、权限和安全行为均以 Hermes 官方文档及当前 Release 为准。资料索引不收录需要登录、已失效或无法公开验证的入口。
 
 ## 系统架构
 
@@ -359,6 +421,7 @@ React 工作区从 `src/data.js` 读取课程和资料数据。诊断、实验�
 
 ```text
 hermes-learning-lab/
+├── .github/                      # CI/Pages、PR 模板与 Discussion 入口
 ├── src/
 │   ├── App.jsx                    # 学习引擎、实验验收、进度迁移与视图
 │   ├── data.js                    # 13 课、资料映射、安装与界面数据
@@ -371,11 +434,16 @@ hermes-learning-lab/
 ├── docs/
 │   ├── labs/README.md             # 真实环境实验手册
 │   ├── TROUBLESHOOTING.md         # 安装、界面、工具和恢复排错
+│   ├── GITHUB-SETUP.md            # Pages、Topics 与 Discussions 设置
+│   ├── METRICS.md                 # 隐私优先的课程衡量方案
 │   └── adr/                       # 架构决策记录
+├── tests/e2e/                     # Playwright 桌面、静态与移动端验收
 ├── assets/readme/                 # README 架构图与可编辑图源
 ├── public/ui-reference/           # 有来源说明的官方界面参考图
 ├── CURRICULUM.md                  # 课程体系和双证据掌握标准
 ├── RESEARCH.md                    # 资料研究、采用边界和版本说明
+├── CONTRIBUTING.md                # 贡献流程与证据标准
+├── LICENSE                        # 代码/课程双许可证
 └── preview.png                    # 当前产品界面截图
 ```
 
@@ -384,6 +452,8 @@ hermes-learning-lab/
 ```bash
 npm run lint
 npm run build
+npm run test:e2e
+npm audit
 ```
 
 - 浏览器模拟不会调用 Shell、修改 `~/.hermes`、安装扩展或连接消息平台。
@@ -391,17 +461,28 @@ npm run build
 - 真实实验建议使用专用目录、隔离 Profile、Sandbox 和单次审批。
 - 回执和实验记录不得包含 Token、App Secret、用户 ID、聊天历史或个人路径。
 - 社区资料中的命令必须回到当前官方文档复核。
+- GitHub Pages 构建会验证 `/hermes-learning-lab/` 子路径，避免部署后出现空白页或资源 404。
 
-设计取舍见 [ADR 0001](./docs/adr/0001-browser-simulation-first.md) 和 [ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md)。
+设计取舍见 [ADR 0001](./docs/adr/0001-browser-simulation-first.md)、[ADR 0002](./docs/adr/0002-explicit-read-only-local-verification.md) 和 [ADR 0003](./docs/adr/0003-local-companion-bridge.md)。
+
+## 社区与贡献
+
+- [学习打卡](https://github.com/ChrysFu/hermes-learning-lab/discussions/categories/general)
+- [环境排错](https://github.com/ChrysFu/hermes-learning-lab/discussions/categories/q-a)
+- [课程纠错](https://github.com/ChrysFu/hermes-learning-lab/discussions/categories/ideas)
+- [毕业项目展示](https://github.com/ChrysFu/hermes-learning-lab/discussions/categories/show-and-tell)
+
+提交修改前请阅读 [CONTRIBUTING.md](./CONTRIBUTING.md)。Pages、Topics 与 Discussion 设置见 [docs/GITHUB-SETUP.md](./docs/GITHUB-SETUP.md)，衡量指标和隐私边界见 [docs/METRICS.md](./docs/METRICS.md)。
 
 ## 资料与许可
 
 - [AI-For-Beginners](https://github.com/microsoft/AI-For-Beginners)：课程 Setup、实验、测验和延伸阅读结构参考。
 - [Hermes Agent](https://github.com/NousResearch/hermes-agent)：运行时、命令和界面事实源。
+- [Hermes Agent v0.20.0 / `v2026.8.3`](https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3)：当前课程核验基线。
 - [Hermes 4.3 model card](https://huggingface.co/NousResearch/Hermes-4.3-36B)：模型、Prompt、Serving 与采样资料。
 - [RESEARCH.md](./RESEARCH.md)：来源核验、采用决策和版本风险。
 
-本仓库当前未包含 `LICENSE` 文件。公开可见不等于自动授予复制、修改或再分发权；第三方资料继续受各自来源的许可与版权条款约束。
+项目代码采用 [MIT License](./LICENSE)；原创课程文字、实验、研究摘要和项目自制图表采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)，允许署名、非商业转载与翻译，并要求衍生内容使用相同许可。第三方截图、商标、模型卡、文章、视频和 PDF 不在本项目再授权范围内。
 
 <p align="right"><a href="#readme-top">返回顶部</a></p>
 

@@ -3,3 +3,5 @@ dist/
 .DS_Store
 *.log
 .readme-architect/
+playwright-report/
+test-results/

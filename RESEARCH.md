@@ -1,6 +1,6 @@
 # Hermes 课程资料研究
 
-核验日期：2026-08-02。事实优先级为 Hermes 官方文档与仓库、NousResearch 模型卡、官方工具链；AI-For-Beginners 只用于教学结构；社区资料只提供界面与实践视角。
+核验日期：2026-08-08。课程当前以 [Hermes Agent v0.20.0（Release tag `v2026.8.3`）](https://github.com/NousResearch/hermes-agent/releases/tag/v2026.8.3) 为版本基线。事实优先级为 Hermes 官方文档与仓库、NousResearch 模型卡、官方工具链；AI-For-Beginners 只用于教学结构；社区资料只提供界面与实践视角。
 
 ## AI-For-Beginners 教学启发
 
@@ -32,10 +32,9 @@ Hermes 是可长期运行的 Agent harness：Provider/Model 可替换；工具�
 | [小红书：Hermes Agent + K2.6 手把手教程 + 接入微信](http://xhslink.cn/o/9x9kb5G27rm) | 模型接入、微信入口 | 已解析到带 `xsec_token` 的完整分享地址；OpenCLI 浏览器扩展未连接，未取得正文 | 只把“模型切换必须回退验收”和“消息入口先私聊后群聊”作为跨来源主题，不采用未核验参数 |
 | [小红书：Hermes agent 17 分钟完整教程](http://xhslink.cn/o/AybhPvcl1fJ) | 快速安装与核心操作 | 同上，仅确认标题与分享元数据 | 强化最小安装基线，不引用正文细节 |
 | [小红书：Hermes Agent 新手使用十大技巧](http://xhslink.cn/o/5eOGAaAftnT) | 主/辅助模型、SOUL、Memory、聊天通道、Doctor、UI、迁移、Skills | 标题可确认；主题与同名 YouTube 章节元数据交叉吻合 | 把术语课改为模型回退、Doctor、Skill 冒烟与迁移恢复演练 |
-| [知乎：Hermes Agent 完整指南](https://zhuanlan.zhihu.com/p/2027128115831260939) | 从安装到进阶玩法 | Jina Reader 在核验时未返回正文 | 不引用具体步骤，仅保留链接供人工复核 |
-| [PAPAYA：Hermes Agent 保姆級教學](https://www.youtube.com/watch?v=-EivK7vpOXY) | 本机/云端安装、Telegram、Memory、OpenRouter、Web Search、Subagent、Google Workspace、Cron、Voice、Skills、Notion、备份与防火墙 | YouTube 搜索页章节元数据；字幕请求触发登录验证 | 采用“普通聊天后再接通道”“Skill 实测”“备份与权限”路径 |
-| [AI 随风：Hermes Agent 新手使用十大技巧](https://www.youtube.com/watch?v=hLiN_X7dzdw) | 主/辅助模型、SOUL、Memory、通道、Doctor、UI、迁移、Skills | YouTube 搜索页章节元数据；字幕请求触发登录验证 | 采用模型切换/回切、Doctor、迁移和 Skill 操作 |
-| [Wanderloots：Full Hermes Agent Tutorial (Desktop)](https://www.youtube.com/watch?v=GL67DEf2nyI) | Desktop 安装与日常工作流 | `yt-dlp` 搜索结果可确认标题、频道与时长；字幕受登录验证限制 | 用作 Desktop 课程选题佐证，不引用视频内命令 |
+| [PAPAYA：Hermes Agent 保姆級教學](https://www.youtube.com/watch?v=-EivK7vpOXY) | 本机/云端安装、Telegram、Memory、OpenRouter、Web Search、Subagent、Google Workspace、Cron、Voice、Skills、Notion、备份与防火墙 | 公开视频入口与章节元数据 | 采用“普通聊天后再接通道”“Skill 实测”“备份与权限”路径 |
+| [AI 随风：Hermes Agent 新手使用十大技巧](https://www.youtube.com/watch?v=hLiN_X7dzdw) | 主/辅助模型、SOUL、Memory、通道、Doctor、UI、迁移、Skills | 公开视频入口与章节元数据 | 采用模型切换/回切、Doctor、迁移和 Skill 操作 |
+| [Wanderloots：Full Hermes Agent Tutorial (Desktop)](https://www.youtube.com/watch?v=GL67DEf2nyI) | Desktop 安装与日常工作流 | 公开视频入口与公开元数据 | 用作 Desktop 课程选题佐证，不引用视频内命令 |
 
 第二轮使用 `yt-dlp` 对中文和英文实操关键词做了三组定向检索，共返回 27 条结果。以下是新增的高相关样本：
 
@@ -49,7 +48,7 @@ Hermes 是可长期运行的 Agent harness：Provider/Model 可替换；工具�
 | [Hermes Agent 官方桌面版：全平台免配置与迁移](https://www.youtube.com/watch?v=MyjHdKiAeJU) | Desktop 与迁移 | Lesson 00 Desktop、Lesson 11 迁移恢复 |
 | [Hermes Agent: Zero to Personal AI Assistant](https://www.youtube.com/watch?v=gb5TlGw6Uks) | 完整入门工作流 | 13 课由基础聊天递进到生产边界 |
 
-这些条目只证明 YouTube 当时返回的标题、频道、时长、上传日期和 URL。未成功取得字幕的条目不作为命令或配置参数的事实来源。
+这些条目用于确认公开视频的标题、频道、主题与 URL。视频中的命令和配置参数仍需回到 Hermes 官方文档逐项复核；需要登录、已失效或无法公开验证的来源不进入学习资料索引。
 
 检索还发现多份教程把“记忆系统、多 Agent、备份、防火墙、消息通道”列为独立章节。这说明初学者真正需要的是一条可观察、可恢复的操作链，而不是先背完 Provider/Model/Profile/SOUL、Skill/Plugin/MCP 或 LoRA/RL 分类。因此本轮做了四项替换：
 
@@ -147,4 +146,4 @@ Prompt contract -> Skill -> SFT / LoRA -> RL with Atropos
 
 ## 版本注意
 
-Hermes 迭代较快，社区教程和命令可能滞后。课程把稳定心智模型放在正文，把具体命令链接到当前官方资料；发布前需要运行链接检查，并定期复核配置键、工具解析器和模型参数。
+Hermes 迭代较快，社区教程和命令可能滞后。当前核验基线是 Hermes Agent v0.20.0（`v2026.8.3`，官方 Release 发布于 2026-08-03）。课程把稳定心智模型放在正文，把具体命令链接到当前官方资料；发布前需要运行链接检查，并定期复核配置键、工具解析器和模型参数。
